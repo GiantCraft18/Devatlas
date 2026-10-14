@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a0a12">
+<meta name="theme-color" content="#08080f">
 <title>DevAtlas — карта ресурсов для программистов</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,7 +109,6 @@
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    transition: all 0.3s;
   }
 
   .topbar-inner {
@@ -128,6 +127,7 @@
     text-decoration: none;
     color: inherit;
     transition: opacity 0.2s;
+    cursor: pointer;
   }
   .brand:hover { opacity: 0.85; }
 
@@ -148,7 +148,7 @@
 
   .brand-text { display: flex; flex-direction: column; }
   .brand-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
-  .brand-sub { font-size: 0.68rem; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 3px; letter-spacing: 0.02em; }
+  .brand-sub { font-size: 0.68rem; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 3px; }
 
   .search-wrap {
     flex: 1;
@@ -168,9 +168,7 @@
     outline: none;
     transition: all 0.2s;
   }
-
   .search-input::placeholder { color: var(--text-mute); }
-
   .search-input:focus {
     border-color: var(--accent);
     background: var(--surface-hover);
@@ -178,29 +176,16 @@
   }
 
   .search-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-mute);
-    font-size: 0.95rem;
-    pointer-events: none;
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    color: var(--text-mute); font-size: 0.95rem; pointer-events: none;
   }
 
   .search-kbd {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 3px;
-    pointer-events: none;
-    transition: opacity 0.2s;
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 3px; pointer-events: none; transition: opacity 0.2s;
   }
-
   .search-input:focus ~ .search-kbd,
   .search-input:not(:placeholder-shown) ~ .search-kbd { opacity: 0; }
-
   .search-kbd kbd {
     padding: 2px 6px;
     background: var(--surface-strong);
@@ -212,53 +197,49 @@
   }
 
   .search-clear {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
-    background: var(--surface-strong);
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    transition: all 0.15s;
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; border-radius: 7px;
+    background: var(--surface-strong); border: none;
+    color: var(--text-dim); cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    font-size: 0.8rem; transition: all 0.15s;
   }
-
   .search-clear.visible { display: flex; }
   .search-clear:hover { background: var(--pink); color: #fff; }
 
   .topbar-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
   .icon-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    display: flex;
+    width: 40px; height: 40px; border-radius: 11px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.25s;
+    flex-shrink: 0; position: relative;
+  }
+  .icon-button:hover {
+    background: var(--surface-hover); color: var(--text);
+    border-color: var(--border-strong); transform: translateY(-1px);
+  }
+  .icon-button:active { transform: scale(0.96); }
+
+  .icon-button .badge-count {
+    position: absolute;
+    top: -4px; right: -4px;
+    min-width: 18px; height: 18px;
+    padding: 0 5px;
+    background: linear-gradient(135deg, #ff5c8a, #ff8fa3);
+    border-radius: 100px;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    display: none;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
-    transition: all 0.25s;
-    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(255, 92, 138, 0.5);
   }
-
-  .icon-button:hover {
-    background: var(--surface-hover);
-    color: var(--text);
-    border-color: var(--border-strong);
-    transform: translateY(-1px);
-  }
-
-  .icon-button:active { transform: scale(0.96); }
+  .icon-button .badge-count.visible { display: flex; }
 
   /* ─── HERO ─── */
   .hero {
@@ -285,11 +266,8 @@
   }
 
   .hero-badge .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
     animation: pulse 2s ease infinite;
   }
 
@@ -333,6 +311,60 @@
     line-height: 1.65;
   }
 
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    padding: 12px 22px;
+    border-radius: 100px;
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(124, 92, 255, 0.4);
+  }
+  .hero-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(124, 92, 255, 0.55);
+  }
+
+  .hero-btn.secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .hero-btn.secondary:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hero-btn .kbd-hint {
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.85;
+  }
+
   .hero-stats {
     display: flex;
     justify-content: center;
@@ -342,31 +374,17 @@
   }
 
   .stat {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 9px 18px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 100px;
-    font-size: 0.83rem;
-    color: var(--text-dim);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    font-size: 0.83rem; color: var(--text-dim);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     transition: all 0.2s;
   }
-
-  .stat:hover {
-    border-color: var(--border-strong);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .stat strong {
-    color: var(--text);
-    font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .stat:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .stat strong { color: var(--text); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
   /* ─── RECOMMENDATIONS ─── */
   .recommendations {
@@ -389,46 +407,28 @@
 
   .rec-panel::before {
     content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 400px;
-    height: 400px;
+    position: absolute; top: -50%; right: -20%;
+    width: 400px; height: 400px;
     background: radial-gradient(circle, rgba(124, 92, 255, 0.2), transparent 70%);
-    pointer-events: none;
-    filter: blur(40px);
+    pointer-events: none; filter: blur(40px);
   }
-
   .rec-panel::after {
     content: '';
-    position: absolute;
-    bottom: -50%;
-    left: -10%;
-    width: 300px;
-    height: 300px;
+    position: absolute; bottom: -50%; left: -10%;
+    width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(255, 92, 138, 0.15), transparent 70%);
-    pointer-events: none;
-    filter: blur(40px);
+    pointer-events: none; filter: blur(40px);
   }
 
   .rec-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
+    position: relative; z-index: 1;
   }
 
   .rec-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
   }
 
   .rec-title .icon {
@@ -443,43 +443,28 @@
   }
 
   .rec-title .sub {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-mute);
-    margin-left: 4px;
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text-mute); margin-left: 4px;
   }
 
   .rec-tabs {
-    display: flex;
-    gap: 4px;
-    padding: 4px;
+    display: flex; gap: 4px; padding: 4px;
     background: rgba(0, 0, 0, 0.25);
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    overflow-x: auto;
-    scrollbar-width: none;
+    border-radius: 100px; border: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none;
   }
   .rec-tabs::-webkit-scrollbar { display: none; }
-
   [data-theme="light"] .rec-tabs { background: rgba(255, 255, 255, 0.6); }
 
   .rec-tab {
     padding: 8px 16px;
-    background: transparent;
-    border: none;
-    border-radius: 100px;
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    background: transparent; border: none; border-radius: 100px;
+    color: var(--text-dim); font-family: inherit;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; display: inline-flex;
+    align-items: center; gap: 6px;
   }
-
   .rec-tab:hover { color: var(--text); }
   .rec-tab.active {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -487,16 +472,33 @@
     box-shadow: 0 6px 16px rgba(124, 92, 255, 0.4);
     transform: translateY(-1px);
   }
+  .rec-tab .tab-count {
+    padding: 1px 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rec-tab:not(.active) .tab-count { background: var(--surface-strong); }
 
   .rec-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 14px;
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
 
-  /* ─── FILTERS + SORT ─── */
+  .rec-empty {
+    grid-column: 1/-1;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 0.9rem;
+  }
+
+  .rec-empty .big { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.5; }
+
+  /* ─── CONTROLS ─── */
   .controls {
     max-width: 1440px;
     margin: 0 auto;
@@ -509,20 +511,14 @@
   }
 
   .filters {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    flex: 1;
+    display: flex; gap: 8px; flex-wrap: wrap;
+    align-items: center; flex: 1;
   }
 
   .filters-label {
-    font-size: 0.78rem;
-    color: var(--text-mute);
-    font-weight: 700;
-    margin-right: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 0.78rem; color: var(--text-mute);
+    font-weight: 700; margin-right: 4px;
+    text-transform: uppercase; letter-spacing: 0.08em;
   }
 
   .filter-btn {
@@ -530,55 +526,48 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 100px;
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
+    color: var(--text-dim); font-family: inherit;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center;
+    gap: 6px; white-space: nowrap;
   }
-
   .filter-btn:hover {
     background: var(--surface-hover);
     border-color: var(--border-strong);
-    color: var(--text);
-    transform: translateY(-1px);
+    color: var(--text); transform: translateY(-1px);
   }
-
   .filter-btn.active {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff;
-    border-color: transparent;
+    color: #fff; border-color: transparent;
     box-shadow: 0 6px 16px rgba(124, 92, 255, 0.3);
     transform: translateY(-1px);
   }
-
   .filter-btn .count {
-    font-size: 0.7rem;
-    opacity: 0.75;
+    font-size: 0.7rem; opacity: 0.75;
     font-family: 'JetBrains Mono', monospace;
     padding: 1px 5px;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
   }
+  .filter-btn:not(.active) .count { background: var(--surface-strong); }
 
-  .filter-btn:not(.active) .count {
-    background: var(--surface-strong);
-  }
-
-  .sort-wrap {
+  .selects-row {
     display: flex;
-    align-items: center;
     gap: 8px;
     flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
-  .sort-label {
-    font-size: 0.78rem;
+  .select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .select-label {
+    font-size: 0.72rem;
     color: var(--text-mute);
     font-weight: 700;
     text-transform: uppercase;
@@ -604,21 +593,9 @@
     background-size: 14px;
     transition: all 0.2s;
   }
-
-  .sort-select:hover {
-    border-color: var(--border-strong);
-    background-color: var(--surface-hover);
-  }
-
-  .sort-select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.15);
-  }
-
-  .sort-select option {
-    background: var(--bg-2);
-    color: var(--text);
-  }
+  .sort-select:hover { border-color: var(--border-strong); background-color: var(--surface-hover); }
+  .sort-select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.15); }
+  .sort-select option { background: var(--bg-2); color: var(--text); }
 
   /* ─── CONTENT ─── */
   .content {
@@ -629,71 +606,66 @@
   }
 
   .result-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding: 12px 18px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding: 12px 18px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-
-  .result-info .num {
-    font-weight: 700;
-    color: var(--accent-2);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .breadcrumbs {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    color: var(--text-mute);
-    margin-bottom: 16px;
+    font-size: 0.85rem; color: var(--text-dim);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     flex-wrap: wrap;
   }
 
-  .breadcrumbs .crumb {
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: color 0.15s;
+  .result-info .num {
+    font-weight: 700; color: var(--accent-2);
+    font-family: 'JetBrains Mono', monospace;
   }
 
+  .result-info .active-filters {
+    display: inline-flex; align-items: center;
+    gap: 4px; flex-wrap: wrap;
+  }
+
+  .result-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(124, 92, 255, 0.15);
+    border: 1px solid rgba(124, 92, 255, 0.25);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    color: var(--accent-2);
+    font-weight: 600;
+  }
+
+  .breadcrumbs {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; color: var(--text-mute);
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .breadcrumbs .crumb { color: var(--text-dim); cursor: pointer; transition: color 0.15s; }
   .breadcrumbs .crumb:hover { color: var(--accent-2); }
   .breadcrumbs .sep { opacity: 0.4; }
   .breadcrumbs .current { color: var(--text); font-weight: 600; }
 
   .section-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.15rem;
-    font-weight: 700;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 1.15rem; font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 18px;
-    margin-top: 32px;
+    margin-bottom: 18px; margin-top: 32px;
   }
-
   .section-title:first-child { margin-top: 0; }
 
   .section-title::before {
     content: '';
-    width: 4px;
-    height: 22px;
+    width: 4px; height: 22px;
     background: linear-gradient(180deg, var(--accent), var(--pink));
-    border-radius: 4px;
-    flex-shrink: 0;
+    border-radius: 4px; flex-shrink: 0;
   }
 
   .section-title .count {
-    font-size: 0.72rem;
-    padding: 3px 10px;
+    font-size: 0.72rem; padding: 3px 10px;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: 100px;
@@ -717,25 +689,20 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
     position: relative;
   }
 
   .card::before {
     content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius);
-    padding: 1px;
+    position: absolute; inset: 0;
+    border-radius: var(--radius); padding: 1px;
     background: linear-gradient(135deg, transparent, rgba(124, 92, 255, 0.3), transparent);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s;
+    opacity: 0; transition: opacity 0.3s;
     pointer-events: none;
   }
 
@@ -744,29 +711,22 @@
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg), 0 0 60px rgba(124, 92, 255, 0.15);
   }
-
   .card:hover::before { opacity: 1; }
 
   .card-thumb {
     aspect-ratio: 16 / 9;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
     background: var(--card-gradient, linear-gradient(135deg, #1a1a26, #0e0e18));
   }
-
   .card-thumb::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
       radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.15), transparent 50%),
       radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.25), transparent 50%);
     pointer-events: none;
   }
-
   [data-theme="light"] .card-thumb::before {
     background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.4), transparent 50%);
   }
@@ -775,77 +735,98 @@
     font-size: 4rem;
     filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.5));
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    z-index: 1;
-    line-height: 1;
+    z-index: 1; line-height: 1;
   }
-
   .card:hover .card-thumb-emoji { transform: scale(1.15) rotate(-5deg); }
 
   .card-thumb-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 5px 11px;
-    border-radius: 100px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 2;
-    color: #fff;
+    position: absolute; top: 12px; left: 12px;
+    padding: 5px 11px; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    z-index: 2; color: #fff;
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
-  .card-thumb-rating {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    padding: 4px 9px;
-    border-radius: 100px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    z-index: 2;
+  .card-thumb-new {
+    position: absolute; top: 12px; right: 12px;
+    padding: 4px 9px; border-radius: 100px;
+    font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 0.08em;
+    z-index: 3; color: #fff;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.5);
+    animation: pulseNew 2s ease infinite;
   }
 
-  .card-thumb-rating .star {
-    color: #fbbf24;
-    font-size: 0.75rem;
+  @keyframes pulseNew {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .card-thumb-actions {
+    position: absolute;
+    top: 12px; right: 12px;
+    display: flex; gap: 6px;
+    z-index: 4;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: all 0.25s;
+  }
+
+  .card:hover .card-thumb-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-action {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.2s;
+    padding: 0;
+  }
+
+  .card-action:hover {
+    background: rgba(0, 0, 0, 0.85);
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .card-action.favorited {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-color: transparent;
+  }
+
+  .card-action.copied {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-color: transparent;
   }
 
   .card-body {
     padding: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
+    display: flex; flex-direction: column;
+    gap: 10px; flex: 1;
   }
 
   .card-category {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    display: inline-flex; align-items: center; gap: 6px;
   }
 
   .card-title {
-    font-size: 1.02rem;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    line-height: 1.35;
+    font-size: 1.02rem; font-weight: 700;
+    letter-spacing: -0.015em; line-height: 1.35;
     color: var(--text);
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -854,8 +835,7 @@
   }
 
   .card-desc {
-    font-size: 0.83rem;
-    color: var(--text-dim);
+    font-size: 0.83rem; color: var(--text-dim);
     line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -865,23 +845,20 @@
   }
 
   .card-meta {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     justify-content: space-between;
     padding-top: 12px;
     border-top: 1px solid var(--border);
-    font-size: 0.73rem;
-    color: var(--text-mute);
+    font-size: 0.73rem; color: var(--text-mute);
     margin-top: auto;
+    gap: 8px;
   }
 
   .card-meta-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
   .card-price {
     font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    display: inline-flex; align-items: center; gap: 4px;
   }
   .card-price.free { color: var(--green); }
   .card-price.paid { color: var(--yellow); }
@@ -897,12 +874,20 @@
     font-weight: 500;
   }
 
+  .card-views {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.68rem;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
   .card-arrow {
     color: var(--text-mute);
     transition: transform 0.25s, color 0.25s;
     font-size: 1rem;
   }
-
   .card:hover .card-arrow {
     color: var(--accent-2);
     transform: translateX(4px);
@@ -910,47 +895,33 @@
 
   /* ─── EMPTY ─── */
   .empty {
-    padding: 80px 20px;
-    text-align: center;
+    padding: 80px 20px; text-align: center;
     color: var(--text-mute);
   }
-
   .empty .big {
-    font-size: 4rem;
-    opacity: 0.35;
-    margin-bottom: 16px;
-    display: block;
+    font-size: 4rem; opacity: 0.35;
+    margin-bottom: 16px; display: block;
     animation: float 3s ease-in-out infinite;
   }
-
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
   }
-
   .empty h3 {
-    font-size: 1.2rem;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-    font-weight: 700;
+    font-size: 1.2rem; color: var(--text-dim);
+    margin-bottom: 8px; font-weight: 700;
   }
-
   .empty p { font-size: 0.88rem; margin-bottom: 20px; }
 
   .empty .reset-btn {
     padding: 10px 20px;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border: none;
-    border-radius: 100px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    border: none; border-radius: 100px;
+    color: #fff; font-family: inherit;
+    font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
     box-shadow: 0 6px 16px rgba(124, 92, 255, 0.4);
   }
-
   .empty .reset-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(124, 92, 255, 0.5);
@@ -958,19 +929,12 @@
 
   /* ─── SCROLL TOP ─── */
   .scroll-top {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    width: 48px;
-    height: 48px;
+    position: fixed; bottom: 28px; right: 28px;
+    width: 48px; height: 48px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: none; color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     font-size: 1.1rem;
     box-shadow: 0 8px 24px rgba(124, 92, 255, 0.5);
     opacity: 0;
@@ -979,31 +943,62 @@
     pointer-events: none;
     z-index: 90;
   }
-
   .scroll-top.visible {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
   }
-
   .scroll-top:hover {
     transform: translateY(-4px) scale(1.05);
     box-shadow: 0 12px 32px rgba(124, 92, 255, 0.6);
   }
 
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-size: 0.85rem;
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.success { border-color: rgba(74, 222, 128, 0.5); }
+  .toast.error { border-color: rgba(255, 92, 138, 0.5); }
+
   /* ─── FOOTER ─── */
   footer {
-    max-width: 1440px;
-    margin: 0 auto;
+    max-width: 1440px; margin: 0 auto;
     padding: 32px 20px 48px;
     text-align: center;
     font-size: 0.82rem;
     color: var(--text-mute);
     border-top: 1px solid var(--border);
   }
-
   footer p { margin-bottom: 8px; line-height: 1.6; }
-  footer a { color: var(--accent-2); text-decoration: none; transition: color 0.2s; font-weight: 500; }
+  footer a {
+    color: var(--accent-2); text-decoration: none;
+    transition: color 0.2s; font-weight: 500;
+  }
   footer a:hover { color: var(--text); }
 
   /* ─── RESPONSIVE ─── */
@@ -1022,7 +1017,7 @@
     .rec-tabs { width: 100%; justify-content: flex-start; }
     .controls { flex-direction: column; align-items: stretch; gap: 12px; }
     .filters { order: 1; }
-    .sort-wrap { order: 2; justify-content: flex-start; }
+    .selects-row { order: 2; justify-content: flex-start; }
   }
 
   @media (max-width: 600px) {
@@ -1034,6 +1029,9 @@
     .hero { padding: 28px 14px 16px; }
     .hero h1 { font-size: 1.7rem; }
     .hero p { font-size: 0.92rem; }
+    .hero-actions { gap: 8px; }
+    .hero-btn { padding: 10px 18px; font-size: 0.85rem; }
+    .hero-btn .kbd-hint { display: none; }
     .hero-stats { gap: 8px; margin-top: 20px; }
     .stat { padding: 7px 14px; font-size: 0.78rem; }
     .recommendations, .controls, .content { padding-left: 14px; padding-right: 14px; }
@@ -1041,15 +1039,19 @@
     .rec-grid { grid-template-columns: 1fr; }
     .cards-grid { grid-template-columns: 1fr; }
     .card:hover { transform: translateY(-2px); }
+    .card-thumb-actions { opacity: 1; transform: translateY(0); }
     .icon-button { width: 36px; height: 36px; font-size: 0.9rem; }
     .search-input { padding: 10px 40px 10px 40px; font-size: 0.85rem; }
     .search-kbd { display: none; }
     .scroll-top { bottom: 20px; right: 20px; width: 42px; height: 42px; }
     .filter-btn { padding: 7px 13px; font-size: 0.78rem; }
-    .sort-select { width: 100%; }
-    .sort-wrap { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .selects-row { width: 100%; }
+    .select-wrap { flex: 1; min-width: 0; }
+    .sort-select { width: 100%; padding: 8px 28px 8px 12px; font-size: 0.78rem; }
+    .select-label { display: none; }
     .result-info { padding: 10px 14px; font-size: 0.82rem; }
     .card-thumb-emoji { font-size: 3.2rem; }
+    .card-thumb-new { top: 8px; right: 8px; font-size: 0.58rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1065,7 +1067,7 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <a href="#" class="brand" id="brandLink">
+    <a class="brand" id="brandLink">
       <div class="brand-mark">🧭</div>
       <div class="brand-text">
         <div class="brand-name">DevAtlas</div>
@@ -1081,7 +1083,11 @@
     </div>
 
     <div class="topbar-actions">
-      <button type="button" class="icon-button" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
+      <button type="button" class="icon-button" id="favoritesBtn" title="Избранное">
+        ⭐
+        <span class="badge-count" id="favCount">0</span>
+      </button>
+      <button type="button" class="icon-button" id="themeToggle" title="Сменить тему">🌙</button>
     </div>
   </div>
 </div>
@@ -1092,7 +1098,15 @@
     <span>Регулярно пополняется новыми ресурсами</span>
   </div>
   <h1>Карта для тех, кто <span>учится программировать</span></h1>
-  <p>Курсы, книги, YouTube-каналы, документация и инструменты — всё в одном месте. Без регистрации, без рекламы, с честными рекомендациями для новичков и не только.</p>
+  <p>Курсы, книги, YouTube-каналы, документация и инструменты — всё в одном месте. Без регистрации, без рекламы, с честными рекомендациями.</p>
+  <div class="hero-actions">
+    <button type="button" class="hero-btn primary" id="randomBtn">
+      🎲 Случайный ресурс <span class="kbd-hint">R</span>
+    </button>
+    <button type="button" class="hero-btn secondary" id="favoritesHeroBtn">
+      ⭐ Моё избранное
+    </button>
+  </div>
   <div class="hero-stats">
     <div class="stat">📚 <strong id="statTotal">0</strong> ресурсов</div>
     <div class="stat">🗂️ <strong id="statCats">0</strong> категорий</div>
@@ -1122,20 +1136,40 @@
     </button>
     <div id="filterButtons" style="display: contents;"></div>
   </div>
-  <div class="sort-wrap">
-    <span class="sort-label">Сортировка</span>
-    <select class="sort-select" id="sortSelect">
-      <option value="default">По категориям</option>
-      <option value="rating">По рейтингу</option>
-      <option value="alpha">А → Я</option>
-      <option value="alpha-desc">Я → А</option>
-    </select>
+  <div class="selects-row">
+    <div class="select-wrap">
+      <span class="select-label">Язык</span>
+      <select class="sort-select" id="langSelect">
+        <option value="all">Все</option>
+        <option value="RU">🇷🇺 Русский</option>
+        <option value="EN">🇬🇧 English</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="select-label">Цена</span>
+      <select class="sort-select" id="priceSelect">
+        <option value="all">Все</option>
+        <option value="free">Бесплатно</option>
+        <option value="freemium">Freemium</option>
+        <option value="paid">Платно</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="select-label">Сортировка</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="default">По категориям</option>
+        <option value="rating">По рейтингу</option>
+        <option value="alpha">А → Я</option>
+        <option value="alpha-desc">Я → А</option>
+      </select>
+    </div>
   </div>
 </div>
 
 <div class="content" id="content"></div>
 
 <button type="button" class="scroll-top" id="scrollTop" aria-label="Наверх">↑</button>
+<div class="toast" id="toast"></div>
 
 <footer>
   <p><strong>DevAtlas</strong> — открытый каталог ресурсов. Всё работает локально в браузере, ничего не отправляется на сервер.</p>
@@ -1144,7 +1178,7 @@
 
 <script>
 /* ============================================================
-   DevAtlas v2.0
+   DevAtlas v3.0
    ============================================================ */
 
 // ─── ДАННЫЕ ────────────────────────────────────────────
@@ -1160,78 +1194,70 @@ const CATEGORIES = [
 ];
 
 const RESOURCES = [
-  // ML
-  { id: 'ml1', title: 'Fast.ai — Practical Deep Learning', desc: 'Бесплатный курс по глубокому обучению. Идёт от практики к теории: сначала делаешь, потом понимаешь. Лучший вход в ML для программистов.', url: 'https://course.fast.ai/', category: 'ml', emoji: '🚀', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'] },
-  { id: 'ml2', title: 'Andrej Karpathy — Neural Networks: Zero to Hero', desc: 'Легендарный курс от бывшего директора AI в Tesla. Строит нейросеть с нуля на Python. Разбирает backpropagation по шагам.', url: 'https://karpathy.ai/zero-to-hero.html', category: 'ml', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'] },
-  { id: 'ml3', title: 'Hugging Face Course', desc: 'Официальный курс по трансформерам и библиотеке Hugging Face. NLP, vision, аудио — всё на практике с готовыми моделями.', url: 'https://huggingface.co/learn/nlp-course', category: 'ml', emoji: '🤗', lang: 'EN', price: 'free', rating: 5, rec: ['ml'] },
-  { id: 'ml4', title: '3Blue1Brown — Нейронные сети', desc: 'Визуальное объяснение нейросетей от Гранта Сандерсона. 4 видео, которые дают интуицию лучше, чем целый семестр.', url: 'https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi', category: 'ml', emoji: '🎬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'] },
-  { id: 'ml5', title: 'Deep Learning Book (Goodfellow)', desc: 'Канонический учебник по глубокому обучению. Тяжело, но фундаментально. Для тех, кто хочет понимать математику.', url: 'https://www.deeplearningbook.org/', category: 'ml', emoji: '📖', lang: 'EN', price: 'free', rating: 4, rec: ['advanced'] },
-  { id: 'ml6', title: 'Kaggle Learn', desc: 'Микро-курсы по ML, Python, Pandas, SQL. Каждый — на пару часов, с практикой прямо в браузере.', url: 'https://www.kaggle.com/learn', category: 'ml', emoji: '🏆', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'ml7', title: 'Deep Learning Specialization (Coursera)', desc: 'Курс Эндрю Ына. Классика, с которой начинали миллионы. Платный сертификат, но материалы можно смотреть бесплатно.', url: 'https://www.coursera.org/specializations/deep-learning', category: 'ml', emoji: '🎓', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'ml'] },
-  { id: 'ml8', title: 'Практикум по ML от Яндекса', desc: 'Русскоязычный курс по машинному обучению. Много практики, разбор реальных задач.', url: 'https://education.yandex.ru/handbook/ml', category: 'ml', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'ml'] },
-  { id: 'ml9', title: 'Papers with Code', desc: 'Каталог ML-статей с кодом. Находишь модель — сразу видишь реализацию. Лучший способ следить за SOTA.', url: 'https://paperswithcode.com/', category: 'ml', emoji: '📄', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'] },
-  { id: 'ml10', title: 'Hugging Face Models', desc: 'Тысячи готовых моделей: от GPT до Stable Diffusion. Скачиваешь, используешь в своём проекте, файнтюнишь.', url: 'https://huggingface.co/models', category: 'ml', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'tools'] },
+  { id: 'ml1', title: 'Fast.ai — Practical Deep Learning', desc: 'Бесплатный курс по глубокому обучению. Идёт от практики к теории: сначала делаешь, потом понимаешь. Лучший вход в ML для программистов.', url: 'https://course.fast.ai/', category: 'ml', emoji: '🚀', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-08-15' },
+  { id: 'ml2', title: 'Andrej Karpathy — Neural Networks: Zero to Hero', desc: 'Легендарный курс от бывшего директора AI в Tesla. Строит нейросеть с нуля на Python. Разбирает backpropagation по шагам.', url: 'https://karpathy.ai/zero-to-hero.html', category: 'ml', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-06-20' },
+  { id: 'ml3', title: 'Hugging Face Course', desc: 'Официальный курс по трансформерам и библиотеке Hugging Face. NLP, vision, аудио — всё на практике с готовыми моделями.', url: 'https://huggingface.co/learn/nlp-course', category: 'ml', emoji: '🤗', lang: 'EN', price: 'free', rating: 5, rec: ['ml'], added: '2026-07-10' },
+  { id: 'ml4', title: '3Blue1Brown — Нейронные сети', desc: 'Визуальное объяснение нейросетей от Гранта Сандерсона. 4 видео, которые дают интуицию лучше, чем целый семестр.', url: 'https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi', category: 'ml', emoji: '🎬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-05-12' },
+  { id: 'ml5', title: 'Deep Learning Book (Goodfellow)', desc: 'Канонический учебник по глубокому обучению. Тяжело, но фундаментально. Для тех, кто хочет понимать математику.', url: 'https://www.deeplearningbook.org/', category: 'ml', emoji: '📖', lang: 'EN', price: 'free', rating: 4, rec: ['advanced'], added: '2026-04-01' },
+  { id: 'ml6', title: 'Kaggle Learn', desc: 'Микро-курсы по ML, Python, Pandas, SQL. Каждый — на пару часов, с практикой прямо в браузере.', url: 'https://www.kaggle.com/learn', category: 'ml', emoji: '🏆', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-15' },
+  { id: 'ml7', title: 'Deep Learning Specialization (Coursera)', desc: 'Курс Эндрю Ына. Классика, с которой начинали миллионы. Платный сертификат, но материалы можно смотреть бесплатно.', url: 'https://www.coursera.org/specializations/deep-learning', category: 'ml', emoji: '🎓', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'ml'], added: '2026-02-10' },
+  { id: 'ml8', title: 'Практикум по ML от Яндекса', desc: 'Русскоязычный курс по машинному обучению. Много практики, разбор реальных задач.', url: 'https://education.yandex.ru/handbook/ml', category: 'ml', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-09-01' },
+  { id: 'ml9', title: 'Papers with Code', desc: 'Каталог ML-статей с кодом. Находишь модель — сразу видишь реализацию. Лучший способ следить за SOTA.', url: 'https://paperswithcode.com/', category: 'ml', emoji: '📄', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'], added: '2026-01-20' },
+  { id: 'ml10', title: 'Hugging Face Models', desc: 'Тысячи готовых моделей: от GPT до Stable Diffusion. Скачиваешь, используешь в своём проекте, файнтюнишь.', url: 'https://huggingface.co/models', category: 'ml', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'tools'], added: '2026-09-25' },
 
-  // Python
-  { id: 'py1', title: 'Официальный туториал Python', desc: 'Документация от разработчиков языка. Скучно, но это база, на которую ссылаются все остальные курсы.', url: 'https://docs.python.org/3/tutorial/', category: 'python', emoji: '🐍', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'py2', title: 'Automate the Boring Stuff', desc: 'Книга для тех, кто не программист, но хочет автоматизировать рутину. Работа с файлами, Excel, PDF, парсинг сайтов.', url: 'https://automatetheboringstuff.com/', category: 'python', emoji: '🤖', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'py3', title: 'Real Python', desc: 'Тысячи статей и туториалов по Python. От синтаксиса до async, от Django до data science.', url: 'https://realpython.com/', category: 'python', emoji: '📰', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'python'] },
-  { id: 'py4', title: 'Pythontutor — визуализация кода', desc: 'Пошаговое выполнение Python-кода с визуализацией переменных и стека.', url: 'https://pythontutor.com/', category: 'python', emoji: '🔬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'py5', title: 'Flask Mega-Tutorial', desc: 'Классический туториал по Flask от Мигеля Гринберга. Строит полноценное приложение от начала до деплоя.', url: 'https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world', category: 'python', emoji: '🌶️', lang: 'EN', price: 'free', rating: 5, rec: ['python', 'web'] },
-  { id: 'py6', title: 'Python. К вершинам мастерства', desc: 'Продвинутая книга по Python. Метаклассы, дескрипторы, генераторы — всё, что отличает джуна от сеньора.', url: 'https://www.ozon.ru/search/?text=python+к+вершинам+мастерства', category: 'python', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced'] },
+  { id: 'py1', title: 'Официальный туториал Python', desc: 'Документация от разработчиков языка. Скучно, но это база, на которую ссылаются все остальные курсы.', url: 'https://docs.python.org/3/tutorial/', category: 'python', emoji: '🐍', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-05' },
+  { id: 'py2', title: 'Automate the Boring Stuff', desc: 'Книга для тех, кто не программист, но хочет автоматизировать рутину. Работа с файлами, Excel, PDF, парсинг сайтов.', url: 'https://automatetheboringstuff.com/', category: 'python', emoji: '🤖', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-22' },
+  { id: 'py3', title: 'Real Python', desc: 'Тысячи статей и туториалов по Python. От синтаксиса до async, от Django до data science.', url: 'https://realpython.com/', category: 'python', emoji: '📰', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'python'], added: '2026-02-18' },
+  { id: 'py4', title: 'Pythontutor — визуализация кода', desc: 'Пошаговое выполнение Python-кода с визуализацией переменных и стека.', url: 'https://pythontutor.com/', category: 'python', emoji: '🔬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-05-08' },
+  { id: 'py5', title: 'Flask Mega-Tutorial', desc: 'Классический туториал по Flask от Мигеля Гринберга. Строит полноценное приложение от начала до деплоя.', url: 'https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world', category: 'python', emoji: '🌶️', lang: 'EN', price: 'free', rating: 5, rec: ['python', 'web'], added: '2026-06-14' },
+  { id: 'py6', title: 'Python. К вершинам мастерства', desc: 'Продвинутая книга по Python. Метаклассы, дескрипторы, генераторы — всё, что отличает джуна от сеньора.', url: 'https://www.ozon.ru/search/?text=python+к+вершинам+мастерства', category: 'python', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced'], added: '2026-04-10' },
 
-  // Web
-  { id: 'web1', title: 'MDN Web Docs', desc: 'Главная документация по вебу: HTML, CSS, JS, Web API. Если что-то не знаешь — начинай отсюда.', url: 'https://developer.mozilla.org/', category: 'web', emoji: '📘', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'] },
-  { id: 'web2', title: 'javascript.info', desc: 'Лучший учебник по JavaScript. От основ до продвинутых тем: промисы, замыкания, прототипы.', url: 'https://javascript.info/', category: 'web', emoji: '🟨', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'web'] },
-  { id: 'web3', title: 'Frontend Masters — Learning Path', desc: 'Структурированные пути обучения: от JS до React, от CSS до Node.', url: 'https://frontendmasters.com/learn/', category: 'web', emoji: '🎯', lang: 'EN', price: 'freemium', rating: 5, rec: ['web'] },
-  { id: 'web4', title: 'Roadmap.sh', desc: 'Визуальные роадмапы для разработчиков: frontend, backend, DevOps, ML.', url: 'https://roadmap.sh/', category: 'web', emoji: '🗺️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'] },
-  { id: 'web5', title: 'CSS-Tricks', desc: 'Блог с лучшими материалами по CSS. Flexbox, Grid, анимации — с примерами.', url: 'https://css-tricks.com/', category: 'web', emoji: '🎨', lang: 'EN', price: 'free', rating: 5, rec: ['web'] },
-  { id: 'web6', title: 'The Odin Project', desc: 'Полностью бесплатный курс по веб-разработке. От HTML до fullstack.', url: 'https://www.theodinproject.com/', category: 'web', emoji: '⚔️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'] },
-  { id: 'web7', title: 'freeCodeCamp', desc: 'Тысячи часов бесплатных курсов по вебу. Сертификаты, проекты, сообщество.', url: 'https://www.freecodecamp.org/', category: 'web', emoji: '🏕️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'web8', title: 'Хекслет', desc: 'Русскоязычная школа программирования. Много бесплатных курсов, сильный курс по JS.', url: 'https://ru.hexlet.io/', category: 'web', emoji: '🇷🇺', lang: 'RU', price: 'freemium', rating: 4, rec: ['beginner'] },
+  { id: 'web1', title: 'MDN Web Docs', desc: 'Главная документация по вебу: HTML, CSS, JS, Web API. Если что-то не знаешь — начинай отсюда.', url: 'https://developer.mozilla.org/', category: 'web', emoji: '📘', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-01-10' },
+  { id: 'web2', title: 'javascript.info', desc: 'Лучший учебник по JavaScript. От основ до продвинутых тем: промисы, замыкания, прототипы.', url: 'https://javascript.info/', category: 'web', emoji: '🟨', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-02-14' },
+  { id: 'web3', title: 'Frontend Masters — Learning Path', desc: 'Структурированные пути обучения: от JS до React, от CSS до Node.', url: 'https://frontendmasters.com/learn/', category: 'web', emoji: '🎯', lang: 'EN', price: 'freemium', rating: 5, rec: ['web'], added: '2026-05-20' },
+  { id: 'web4', title: 'Roadmap.sh', desc: 'Визуальные роадмапы для разработчиков: frontend, backend, DevOps, ML.', url: 'https://roadmap.sh/', category: 'web', emoji: '🗺️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-03-05' },
+  { id: 'web5', title: 'CSS-Tricks', desc: 'Блог с лучшими материалами по CSS. Flexbox, Grid, анимации — с примерами.', url: 'https://css-tricks.com/', category: 'web', emoji: '🎨', lang: 'EN', price: 'free', rating: 5, rec: ['web'], added: '2026-04-18' },
+  { id: 'web6', title: 'The Odin Project', desc: 'Полностью бесплатный курс по веб-разработке. От HTML до fullstack.', url: 'https://www.theodinproject.com/', category: 'web', emoji: '⚔️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-07-22' },
+  { id: 'web7', title: 'freeCodeCamp', desc: 'Тысячи часов бесплатных курсов по вебу. Сертификаты, проекты, сообщество.', url: 'https://www.freecodecamp.org/', category: 'web', emoji: '🏕️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-15' },
+  { id: 'web8', title: 'Хекслет', desc: 'Русскоязычная школа программирования. Много бесплатных курсов, сильный курс по JS.', url: 'https://ru.hexlet.io/', category: 'web', emoji: '🇷🇺', lang: 'RU', price: 'freemium', rating: 4, rec: ['beginner'], added: '2026-09-10' },
 
-  // Algorithms
-  { id: 'alg1', title: 'LeetCode', desc: 'Стандарт для подготовки к собеседованиям. 2000+ задач по алгоритмам с автоматической проверкой.', url: 'https://leetcode.com/', category: 'algorithms', emoji: '💡', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced'] },
-  { id: 'alg2', title: 'NeetCode — Roadmap', desc: 'Упорядоченный путь по LeetCode: 150 задач, которые покрывают все паттерны.', url: 'https://neetcode.io/roadmap', category: 'algorithms', emoji: '🧭', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'algorithms'] },
-  { id: 'alg3', title: 'Грокаем алгоритмы', desc: 'Иллюстрированное введение в алгоритмы. Без сложной математики, с картинками.', url: 'https://www.ozon.ru/search/?text=грокаем+алгоритмы', category: 'algorithms', emoji: '📗', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'algorithms'] },
-  { id: 'alg4', title: 'Алгоритмы. Построение и анализ (CLRS)', desc: 'Академическая библия по алгоритмам. Тяжело, но это то, что читают в MIT.', url: 'https://www.ozon.ru/search/?text=алгоритмы+построение+и+анализ', category: 'algorithms', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced'] },
-  { id: 'alg5', title: 'CS50 — Harvard', desc: 'Легендарный вводный курс CS от Гарварда. Начинается с C, доходит до Python и веба.', url: 'https://cs50.harvard.edu/x/', category: 'algorithms', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'algorithms'] },
-  { id: 'alg6', title: 'VisuAlgo', desc: 'Визуализация алгоритмов и структур данных. Смотришь, как работает сортировка — сразу понятно.', url: 'https://visualgo.net/', category: 'algorithms', emoji: '🎞️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
+  { id: 'alg1', title: 'LeetCode', desc: 'Стандарт для подготовки к собеседованиям. 2000+ задач по алгоритмам с автоматической проверкой.', url: 'https://leetcode.com/', category: 'algorithms', emoji: '💡', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced'], added: '2026-01-08' },
+  { id: 'alg2', title: 'NeetCode — Roadmap', desc: 'Упорядоченный путь по LeetCode: 150 задач, которые покрывают все паттерны.', url: 'https://neetcode.io/roadmap', category: 'algorithms', emoji: '🧭', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'algorithms'], added: '2026-08-05' },
+  { id: 'alg3', title: 'Грокаем алгоритмы', desc: 'Иллюстрированное введение в алгоритмы. Без сложной математики, с картинками.', url: 'https://www.ozon.ru/search/?text=грокаем+алгоритмы', category: 'algorithms', emoji: '📗', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-05-01' },
+  { id: 'alg4', title: 'Алгоритмы. Построение и анализ (CLRS)', desc: 'Академическая библия по алгоритмам. Тяжело, но это то, что читают в MIT.', url: 'https://www.ozon.ru/search/?text=алгоритмы+построение+и+анализ', category: 'algorithms', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced'], added: '2026-02-20' },
+  { id: 'alg5', title: 'CS50 — Harvard', desc: 'Легендарный вводный курс CS от Гарварда. Начинается с C, доходит до Python и веба.', url: 'https://cs50.harvard.edu/x/', category: 'algorithms', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-06-30' },
+  { id: 'alg6', title: 'VisuAlgo', desc: 'Визуализация алгоритмов и структур данных. Смотришь, как работает сортировка — сразу понятно.', url: 'https://visualgo.net/', category: 'algorithms', emoji: '🎞️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-04-25' },
 
-  // Books
-  { id: 'bk1', title: 'Чистый код (Robert Martin)', desc: 'Классика о том, как писать код, который можно читать. Примеры на Java, но принципы универсальны.', url: 'https://www.ozon.ru/search/?text=чистый+код', category: 'books', emoji: '📘', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'] },
-  { id: 'bk2', title: 'Программист-прагматик', desc: 'Не про синтаксис, а про подход. Как думать о коде, как учиться, как не выгорать.', url: 'https://www.ozon.ru/search/?text=программист+прагматик', category: 'books', emoji: '📙', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'] },
-  { id: 'bk3', title: 'Рефакторинг (Martin Fowler)', desc: 'Каталог приёмов улучшения кода. Что делать, когда код работает, но плохо пахнет.', url: 'https://www.ozon.ru/search/?text=рефакторинг+фowler', category: 'books', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['books'] },
-  { id: 'bk4', title: 'Гарри Поттер и методы рационального мышления', desc: 'Не про программирование, но про то, как думать. Логика, байесовский вывод, критическое мышление.', url: 'http://hpmor.ru/', category: 'books', emoji: '⚡', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'books'] },
-  { id: 'bk5', title: 'Structure and Interpretation of Computer Programs', desc: 'SICP — легендарная книга MIT. Учит думать о программах в терминах абстракций.', url: 'https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html', category: 'books', emoji: '📗', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'] },
-  { id: 'bk6', title: 'Designing Data-Intensive Applications', desc: 'DDIA — библия для тех, кто работает с данными. Про распределённые системы, БД, консенсус.', url: 'https://dataintensive.net/', category: 'books', emoji: '🏗️', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'] },
+  { id: 'bk1', title: 'Чистый код (Robert Martin)', desc: 'Классика о том, как писать код, который можно читать. Примеры на Java, но принципы универсальны.', url: 'https://www.ozon.ru/search/?text=чистый+код', category: 'books', emoji: '📘', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-01-25' },
+  { id: 'bk2', title: 'Программист-прагматик', desc: 'Не про синтаксис, а про подход. Как думать о коде, как учиться, как не выгорать.', url: 'https://www.ozon.ru/search/?text=программист+прагматик', category: 'books', emoji: '📙', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-03-12' },
+  { id: 'bk3', title: 'Рефакторинг (Martin Fowler)', desc: 'Каталог приёмов улучшения кода. Что делать, когда код работает, но плохо пахнет.', url: 'https://www.ozon.ru/search/?text=рефакторинг+фowler', category: 'books', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['books'], added: '2026-05-14' },
+  { id: 'bk4', title: 'Гарри Поттер и методы рационального мышления', desc: 'Не про программирование, но про то, как думать. Логика, байесовский вывод, критическое мышление.', url: 'http://hpmor.ru/', category: 'books', emoji: '⚡', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'books'], added: '2026-07-18' },
+  { id: 'bk5', title: 'Structure and Interpretation of Computer Programs', desc: 'SICP — легендарная книга MIT. Учит думать о программах в терминах абстракций.', url: 'https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html', category: 'books', emoji: '📗', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'], added: '2026-02-08' },
+  { id: 'bk6', title: 'Designing Data-Intensive Applications', desc: 'DDIA — библия для тех, кто работает с данными. Про распределённые системы, БД, консенсус.', url: 'https://dataintensive.net/', category: 'books', emoji: '🏗️', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-06-05' },
 
-  // YouTube
-  { id: 'yt1', title: 'Хауди Хо', desc: 'Русскоязычный канал о программировании. Объясняет сложные вещи просто, много разборов.', url: 'https://www.youtube.com/@HowdyHoChannel', category: 'youtube', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'yt2', title: 'Vlad Mishustin', desc: 'Канал о фронтенде и вебе. Разборы React, JS, CSS, архитектуры.', url: 'https://www.youtube.com/@vladmishustin', category: 'youtube', emoji: '⚛️', lang: 'RU', price: 'free', rating: 5, rec: ['web'] },
-  { id: 'yt3', title: 'Fireship', desc: 'Короткие видео по 100 секунд о новых технологиях, фреймворках и языках.', url: 'https://www.youtube.com/@Fireship', category: 'youtube', emoji: '🔥', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'] },
-  { id: 'yt4', title: 'Andrej Karpathy', desc: 'Канал автора Neural Networks: Zero to Hero. Строит GPT с нуля, разбирает трансформеры.', url: 'https://www.youtube.com/@AndrejKarpathy', category: 'youtube', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'advanced'] },
-  { id: 'yt5', title: 'Traversy Media', desc: 'Классика YouTube-обучения вебу. Курсы по React, Node, JS, CSS.', url: 'https://www.youtube.com/@TraversyMedia', category: 'youtube', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'] },
-  { id: 'yt6', title: 'Хекслет — YouTube', desc: 'Канал школы Хекслет. Разборы основ программирования, объяснения концепций.', url: 'https://www.youtube.com/@hexlet', category: 'youtube', emoji: '📺', lang: 'RU', price: 'free', rating: 4, rec: ['beginner'] },
-  { id: 'yt7', title: 'Computer Science Center', desc: 'Канал CS Center с лекциями по алгоритмам, ML, C++. Материалы уровня университета.', url: 'https://www.youtube.com/@compscicenter', category: 'youtube', emoji: '🏛️', lang: 'RU', price: 'free', rating: 5, rec: ['algorithms'] },
+  { id: 'yt1', title: 'Хауди Хо', desc: 'Русскоязычный канал о программировании. Объясняет сложные вещи просто, много разборов.', url: 'https://www.youtube.com/@HowdyHoChannel', category: 'youtube', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-30' },
+  { id: 'yt2', title: 'Vlad Mishustin', desc: 'Канал о фронтенде и вебе. Разборы React, JS, CSS, архитектуры.', url: 'https://www.youtube.com/@vladmishustin', category: 'youtube', emoji: '⚛️', lang: 'RU', price: 'free', rating: 5, rec: ['web'], added: '2026-04-05' },
+  { id: 'yt3', title: 'Fireship', desc: 'Короткие видео по 100 секунд о новых технологиях, фреймворках и языках.', url: 'https://www.youtube.com/@Fireship', category: 'youtube', emoji: '🔥', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-08' },
+  { id: 'yt4', title: 'Andrej Karpathy', desc: 'Канал автора Neural Networks: Zero to Hero. Строит GPT с нуля, разбирает трансформеры.', url: 'https://www.youtube.com/@AndrejKarpathy', category: 'youtube', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'advanced'], added: '2026-08-20' },
+  { id: 'yt5', title: 'Traversy Media', desc: 'Классика YouTube-обучения вебу. Курсы по React, Node, JS, CSS.', url: 'https://www.youtube.com/@TraversyMedia', category: 'youtube', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-02-25' },
+  { id: 'yt6', title: 'Хекслет — YouTube', desc: 'Канал школы Хекслет. Разборы основ программирования, объяснения концепций.', url: 'https://www.youtube.com/@hexlet', category: 'youtube', emoji: '📺', lang: 'RU', price: 'free', rating: 4, rec: ['beginner'], added: '2026-06-15' },
+  { id: 'yt7', title: 'Computer Science Center', desc: 'Канал CS Center с лекциями по алгоритмам, ML, C++. Материалы уровня университета.', url: 'https://www.youtube.com/@compscicenter', category: 'youtube', emoji: '🏛️', lang: 'RU', price: 'free', rating: 5, rec: ['algorithms'], added: '2026-05-22' },
 
-  // Tools
-  { id: 'tl1', title: 'GitHub', desc: 'Где живёт весь open source. Изучай чужие проекты, веди свои, собери портфолио.', url: 'https://github.com/', category: 'tools', emoji: '🐙', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'] },
-  { id: 'tl2', title: 'VS Code', desc: 'Редактор кода №1. Тысячи расширений, бесплатный, кросс-платформенный.', url: 'https://code.visualstudio.com/', category: 'tools', emoji: '💻', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'] },
-  { id: 'tl3', title: 'Obsidian', desc: 'Заметки в Markdown с графом связей. Отлично подходит для ведения конспектов.', url: 'https://obsidian.md/', category: 'tools', emoji: '🗒️', lang: 'EN', price: 'free', rating: 5, rec: ['tools'] },
-  { id: 'tl4', title: 'RegExr', desc: 'Онлайн-редактор регулярных выражений. Пишешь regex — сразу видишь, что матчится.', url: 'https://regexr.com/', category: 'tools', emoji: '🔍', lang: 'EN', price: 'free', rating: 5, rec: ['tools'] },
-  { id: 'tl5', title: 'CodePen', desc: 'Онлайн-песочница для HTML/CSS/JS. Быстро проверить идею, поделиться сниппетом.', url: 'https://codepen.io/', category: 'tools', emoji: '🖊️', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'tools'] },
-  { id: 'tl6', title: 'Docker', desc: 'Контейнеризация всего. Разворачивать проекты становится в разы проще.', url: 'https://www.docker.com/', category: 'tools', emoji: '🐳', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced'] },
-  { id: 'tl7', title: 'Google Colab', desc: 'Jupyter-ноутбуки в браузере с бесплатным GPU. Для ML-экспериментов.', url: 'https://colab.research.google.com/', category: 'tools', emoji: '☁️', lang: 'EN', price: 'freemium', rating: 5, rec: ['ml', 'tools'] },
-  { id: 'tl8', title: 'Anki', desc: 'Программа для интервального повторения. Идеальна для заучивания терминов.', url: 'https://apps.ankiweb.net/', category: 'tools', emoji: '🎴', lang: 'EN', price: 'free', rating: 5, rec: ['tools'] },
+  { id: 'tl1', title: 'GitHub', desc: 'Где живёт весь open source. Изучай чужие проекты, веди свои, собери портфолио.', url: 'https://github.com/', category: 'tools', emoji: '🐙', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'], added: '2026-01-02' },
+  { id: 'tl2', title: 'VS Code', desc: 'Редактор кода №1. Тысячи расширений, бесплатный, кросс-платформенный.', url: 'https://code.visualstudio.com/', category: 'tools', emoji: '💻', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'], added: '2026-02-12' },
+  { id: 'tl3', title: 'Obsidian', desc: 'Заметки в Markdown с графом связей. Отлично подходит для ведения конспектов.', url: 'https://obsidian.md/', category: 'tools', emoji: '🗒️', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-04-08' },
+  { id: 'tl4', title: 'RegExr', desc: 'Онлайн-редактор регулярных выражений. Пишешь regex — сразу видишь, что матчится.', url: 'https://regexr.com/', category: 'tools', emoji: '🔍', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-03-18' },
+  { id: 'tl5', title: 'CodePen', desc: 'Онлайн-песочница для HTML/CSS/JS. Быстро проверить идею, поделиться сниппетом.', url: 'https://codepen.io/', category: 'tools', emoji: '🖊️', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'tools'], added: '2026-05-28' },
+  { id: 'tl6', title: 'Docker', desc: 'Контейнеризация всего. Разворачивать проекты становится в разы проще.', url: 'https://www.docker.com/', category: 'tools', emoji: '🐳', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced'], added: '2026-06-25' },
+  { id: 'tl7', title: 'Google Colab', desc: 'Jupyter-ноутбуки в браузере с бесплатным GPU. Для ML-экспериментов.', url: 'https://colab.research.google.com/', category: 'tools', emoji: '☁️', lang: 'EN', price: 'freemium', rating: 5, rec: ['ml', 'tools'], added: '2026-07-15' },
+  { id: 'tl8', title: 'Anki', desc: 'Программа для интервального повторения. Идеальна для заучивания терминов.', url: 'https://apps.ankiweb.net/', category: 'tools', emoji: '🎴', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-08-10' },
 
-  // Design
-  { id: 'ds1', title: 'Refactoring UI', desc: 'Книга для разработчиков о дизайне. Как сделать интерфейс, который не стыдно показать.', url: 'https://www.refactoringui.com/', category: 'design', emoji: '🎨', lang: 'EN', price: 'paid', rating: 5, rec: ['design'] },
-  { id: 'ds2', title: 'Figma', desc: 'Стандарт дизайна интерфейсов. Работает в браузере, бесплатно для личных проектов.', url: 'https://www.figma.com/', category: 'design', emoji: '🎭', lang: 'EN', price: 'freemium', rating: 5, rec: ['design'] },
-  { id: 'ds3', title: 'Coolors', desc: 'Генератор цветовых палитр. Одна кнопка — и у тебя красивая схема.', url: 'https://coolors.co/', category: 'design', emoji: '🌈', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'tools'] },
-  { id: 'ds4', title: 'Google Fonts', desc: 'Тысячи бесплатных шрифтов, готовых к использованию на сайте.', url: 'https://fonts.google.com/', category: 'design', emoji: '🅰️', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'web'] },
-  { id: 'ds5', title: 'Unsplash', desc: 'Бесплатные фото высокого качества. Для обложек, блогов, презентаций.', url: 'https://unsplash.com/', category: 'design', emoji: '📷', lang: 'EN', price: 'free', rating: 5, rec: ['design'] },
-  { id: 'ds6', title: 'Laws of UX', desc: 'Законы UX в карточках: почему пользователи ведут себя так, а не иначе.', url: 'https://lawsofux.com/', category: 'design', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['design'] },
+  { id: 'ds1', title: 'Refactoring UI', desc: 'Книга для разработчиков о дизайне. Как сделать интерфейс, который не стыдно показать.', url: 'https://www.refactoringui.com/', category: 'design', emoji: '🎨', lang: 'EN', price: 'paid', rating: 5, rec: ['design'], added: '2026-02-05' },
+  { id: 'ds2', title: 'Figma', desc: 'Стандарт дизайна интерфейсов. Работает в браузере, бесплатно для личных проектов.', url: 'https://www.figma.com/', category: 'design', emoji: '🎭', lang: 'EN', price: 'freemium', rating: 5, rec: ['design'], added: '2026-01-20' },
+  { id: 'ds3', title: 'Coolors', desc: 'Генератор цветовых палитр. Одна кнопка — и у тебя красивая схема.', url: 'https://coolors.co/', category: 'design', emoji: '🌈', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'tools'], added: '2026-04-12' },
+  { id: 'ds4', title: 'Google Fonts', desc: 'Тысячи бесплатных шрифтов, готовых к использованию на сайте.', url: 'https://fonts.google.com/', category: 'design', emoji: '🅰️', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'web'], added: '2026-03-25' },
+  { id: 'ds5', title: 'Unsplash', desc: 'Бесплатные фото высокого качества. Для обложек, блогов, презентаций.', url: 'https://unsplash.com/', category: 'design', emoji: '📷', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-05-30' },
+  { id: 'ds6', title: 'Laws of UX', desc: 'Законы UX в карточках: почему пользователи ведут себя так, а не иначе.', url: 'https://lawsofux.com/', category: 'design', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-09-15' },
 ];
 
 const REC_GROUPS = [
@@ -1245,13 +1271,47 @@ const REC_GROUPS = [
   { id: 'advanced', name: 'Продвинутым', emoji: '🚀' },
 ];
 
+// ─── STORAGE ───────────────────────────────────────────
+const STORAGE = {
+  theme: 'devatlas-theme',
+  favorites: 'devatlas-favorites',
+  views: 'devatlas-views',
+};
+
+function loadFavorites() {
+  try {
+    const raw = localStorage.getItem(STORAGE.favorites);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function saveFavorites(list) {
+  try { localStorage.setItem(STORAGE.favorites, JSON.stringify(list)); } catch(e) {}
+}
+
+function loadViews() {
+  try {
+    const raw = localStorage.getItem(STORAGE.views);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveViews(data) {
+  try { localStorage.setItem(STORAGE.views, JSON.stringify(data)); } catch(e) {}
+}
+
 // ─── СОСТОЯНИЕ ─────────────────────────────────────────
 const state = {
   theme: 'dark',
   search: '',
   category: 'all',
+  lang: 'all',
+  price: 'all',
   recGroup: 'beginner',
   sort: 'default',
+  showFavorites: false,
+  favorites: loadFavorites(),
+  views: loadViews(),
 };
 
 // ─── DOM ───────────────────────────────────────────────
@@ -1261,7 +1321,11 @@ const $$ = (sel) => document.querySelectorAll(sel);
 const searchInput = $('#searchInput');
 const searchClear = $('#searchClear');
 const sortSelect = $('#sortSelect');
+const langSelect = $('#langSelect');
+const priceSelect = $('#priceSelect');
 const scrollTopBtn = $('#scrollTop');
+const toastEl = $('#toast');
+const favCountEl = $('#favCount');
 
 // ─── УТИЛИТЫ ───────────────────────────────────────────
 function getCategory(id) {
@@ -1281,17 +1345,108 @@ function highlightMatch(text, query) {
   return escaped.replace(new RegExp(q, 'gi'), (m) => `<mark style="background: rgba(124,92,255,0.35); color: inherit; padding: 0 3px; border-radius: 3px;">${m}</mark>`);
 }
 
+function isNew(resource) {
+  if (!resource.added) return false;
+  const diff = Date.now() - new Date(resource.added).getTime();
+  return diff < 30 * 24 * 60 * 60 * 1000;
+}
+
+function declOfNum(n, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+  return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
+}
+
+// ─── TOAST ─────────────────────────────────────────────
+let toastTimeout;
+function showToast(text, type = 'info') {
+  toastEl.textContent = text;
+  toastEl.classList.remove('success', 'error');
+  if (type === 'success') toastEl.classList.add('success');
+  if (type === 'error') toastEl.classList.add('error');
+  toastEl.classList.add('visible');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toastEl.classList.remove('visible'), 2200);
+}
+
 // ─── ТЕМА ──────────────────────────────────────────────
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   state.theme = theme;
   $('#themeToggle').textContent = theme === 'dark' ? '🌙' : '☀️';
-  try { localStorage.setItem('devatlas-theme', theme); } catch(e) {}
+  try { localStorage.setItem(STORAGE.theme, theme); } catch(e) {}
 }
 
 $('#themeToggle').addEventListener('click', () => {
-  applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+  const next = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  showToast(next === 'dark' ? '🌙 Тёмная тема' : '☀️ Светлая тема');
 });
+
+// ─── ИЗБРАННОЕ ─────────────────────────────────────────
+function isFavorite(id) {
+  return state.favorites.includes(id);
+}
+
+function toggleFavorite(id) {
+  const idx = state.favorites.indexOf(id);
+  if (idx === -1) {
+    state.favorites.push(id);
+    showToast('⭐ Добавлено в избранное', 'success');
+  } else {
+    state.favorites.splice(idx, 1);
+    showToast('Удалено из избранного');
+  }
+  saveFavorites(state.favorites);
+  updateFavCount();
+  render();
+  renderRecommendations();
+}
+
+function updateFavCount() {
+  const count = state.favorites.length;
+  favCountEl.textContent = count > 99 ? '99+' : count;
+  favCountEl.classList.toggle('visible', count > 0);
+}
+
+$('#favoritesBtn').addEventListener('click', () => {
+  state.showFavorites = !state.showFavorites;
+  if (state.showFavorites) {
+    state.category = 'all';
+    state.search = '';
+    state.lang = 'all';
+    state.price = 'all';
+    state.recGroup = 'favorites';
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    langSelect.value = 'all';
+    priceSelect.value = 'all';
+    updateFilterButtons();
+    renderRecTabs();
+    renderRecommendations();
+  }
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+$('#favoritesHeroBtn').addEventListener('click', () => {
+  state.showFavorites = true;
+  state.recGroup = 'favorites';
+  state.category = 'all';
+  state.search = '';
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  updateFilterButtons();
+  renderRecTabs();
+  renderRecommendations();
+  render();
+  showToast('⭐ Показаны избранные ресурсы');
+});
+
+// ─── ПРОСМОТРЫ ─────────────────────────────────────────
+function trackView(id) {
+  state.views[id] = (state.views[id] || 0) + 1;
+  saveViews(state.views);
+}
 
 // ─── ПОИСК ─────────────────────────────────────────────
 function matchesSearch(resource, query) {
@@ -1339,28 +1494,40 @@ function renderFilters() {
     btn.innerHTML = `${cat.emoji} ${cat.name} <span class="count">${count}</span>`;
     btn.addEventListener('click', () => {
       state.category = cat.id;
+      state.showFavorites = false;
       updateFilterButtons();
       render();
     });
     container.appendChild(btn);
   });
 
-  allBtn.classList.toggle('active', state.category === 'all');
+  allBtn.classList.toggle('active', state.category === 'all' && !state.showFavorites);
 }
 
 function updateFilterButtons() {
   $$('.filter-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.cat === state.category);
+    btn.classList.toggle('active', btn.dataset.cat === state.category && !state.showFavorites);
   });
 }
 
 $('[data-cat="all"]').addEventListener('click', () => {
   state.category = 'all';
+  state.showFavorites = false;
   updateFilterButtons();
   render();
 });
 
-// ─── СОРТИРОВКА ────────────────────────────────────────
+// ─── ЯЗЫК / ЦЕНА / СОРТИРОВКА ──────────────────────────
+langSelect.addEventListener('change', (e) => {
+  state.lang = e.target.value;
+  render();
+});
+
+priceSelect.addEventListener('change', (e) => {
+  state.price = e.target.value;
+  render();
+});
+
 sortSelect.addEventListener('change', (e) => {
   state.sort = e.target.value;
   render();
@@ -1382,13 +1549,29 @@ function sortResources(list) {
 function renderRecTabs() {
   const container = $('#recTabs');
   container.innerHTML = '';
+
+  // Вкладка "Избранное"
+  const favBtn = document.createElement('button');
+  favBtn.type = 'button';
+  favBtn.className = 'rec-tab' + (state.recGroup === 'favorites' ? ' active' : '');
+  favBtn.innerHTML = `⭐ Моё <span class="tab-count">${state.favorites.length}</span>`;
+  favBtn.addEventListener('click', () => {
+    state.recGroup = 'favorites';
+    state.showFavorites = true;
+    renderRecTabs();
+    renderRecommendations();
+  });
+  container.appendChild(favBtn);
+
   REC_GROUPS.forEach(g => {
+    const count = RESOURCES.filter(r => r.rec && r.rec.includes(g.id)).length;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'rec-tab' + (state.recGroup === g.id ? ' active' : '');
-    btn.innerHTML = `${g.emoji} ${g.name}`;
+    btn.innerHTML = `${g.emoji} ${g.name} <span class="tab-count">${count}</span>`;
     btn.addEventListener('click', () => {
       state.recGroup = g.id;
+      state.showFavorites = false;
       renderRecTabs();
       renderRecommendations();
     });
@@ -1399,14 +1582,30 @@ function renderRecTabs() {
 function renderRecommendations() {
   const container = $('#recGrid');
   const subtitle = $('#recSubtitle');
-  const recs = RESOURCES.filter(r => r.rec && r.rec.includes(state.recGroup));
-  const group = REC_GROUPS.find(g => g.id === state.recGroup);
 
-  subtitle.textContent = group ? `для «${group.name}»` : '';
+  let recs;
+  let subtitleText;
+
+  if (state.recGroup === 'favorites') {
+    recs = RESOURCES.filter(r => isFavorite(r.id));
+    subtitleText = recs.length ? `${recs.length} ${declOfNum(recs.length, ['ресурс', 'ресурса', 'ресурсов'])}` : '';
+  } else {
+    recs = RESOURCES.filter(r => r.rec && r.rec.includes(state.recGroup));
+    const group = REC_GROUPS.find(g => g.id === state.recGroup);
+    subtitleText = group ? `для «${group.name}»` : '';
+  }
+
+  subtitle.textContent = subtitleText;
   container.innerHTML = '';
 
   if (!recs.length) {
-    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--text-mute); font-size: 0.88rem;">В этой группе пока нет рекомендаций</div>`;
+    container.innerHTML = `
+      <div class="rec-empty">
+        <span class="big">${state.recGroup === 'favorites' ? '⭐' : '🔍'}</span>
+        <div>${state.recGroup === 'favorites' ? 'Ты пока не добавил ни одного ресурса в избранное' : 'В этой группе пока нет рекомендаций'}</div>
+        <div style="margin-top: 8px; font-size: 0.8rem;">Нажми на ⭐ на карточке, чтобы добавить</div>
+      </div>
+    `;
     return;
   }
 
@@ -1420,47 +1619,115 @@ function createCard(r) {
   const cat = getCategory(r.category);
   const priceLabel = r.price === 'free' ? '✓ Бесплатно' : r.price === 'paid' ? '$ Платно' : '~ Freemium';
   const priceClass = r.price;
+  const fav = isFavorite(r.id);
+  const views = state.views[r.id] || 0;
+  const isNewItem = isNew(r);
 
   const a = document.createElement('a');
   a.className = 'card';
   a.href = r.url;
   a.target = '_blank';
   a.rel = 'noopener noreferrer';
+  a.dataset.id = r.id;
 
   const q = state.search;
-  const stars = '★'.repeat(r.rating || 5);
 
   a.innerHTML = `
     <div class="card-thumb" style="background: ${cat.gradient};">
       <div class="card-thumb-emoji">${r.emoji}</div>
       <div class="card-thumb-badge">${cat.emoji} ${cat.name}</div>
-      <div class="card-thumb-rating" title="Рейтинг: ${r.rating}/5">
-        <span class="star">★</span> ${r.rating || 5}
+      ${isNewItem ? '<div class="card-thumb-new">NEW</div>' : ''}
+      <div class="card-thumb-actions">
+        <button type="button" class="card-action ${fav ? 'favorited' : ''}" data-action="fav" title="${fav ? 'Убрать из избранного' : 'В избранное'}">${fav ? '★' : '☆'}</button>
+        <button type="button" class="card-action" data-action="share" title="Поделиться">🔗</button>
       </div>
     </div>
     <div class="card-body">
       <div class="card-category" style="color: ${cat.color};">${cat.name}</div>
       <div class="card-title">${highlightMatch(r.title, q)}</div>
-      <div class="card-desc">${highlightMatch(r.desc, q)}</div>
+      <div class="card-desc" title="${escapeHtml(r.desc)}">${highlightMatch(r.desc, q)}</div>
       <div class="card-meta">
         <div class="card-meta-left">
           <span class="card-price ${priceClass}">${priceLabel}</span>
           <span class="card-lang">${r.lang}</span>
+          ${views > 0 ? `<span class="card-views" title="Ты открывал это ${views} раз">👁 ${views}</span>` : ''}
         </div>
         <span class="card-arrow">→</span>
       </div>
     </div>
   `;
+
+  // Отслеживание клика на карточку (открытие ресурса)
+  a.addEventListener('click', (e) => {
+    if (e.target.closest('.card-action')) return;
+    trackView(r.id);
+  });
+
+  // Кнопки действий
+  a.addEventListener('click', (e) => {
+    const action = e.target.closest('.card-action');
+    if (!action) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const type = action.dataset.action;
+    if (type === 'fav') {
+      toggleFavorite(r.id);
+    } else if (type === 'share') {
+      shareResource(r, action);
+    }
+  });
+
   return a;
 }
 
-// ─── ОСНОВНОЙ РЕНДЕР ───────────────────────────────────
+// ─── ПОДЕЛИТЬСЯ ────────────────────────────────────────
+async function shareResource(r, buttonEl) {
+  const shareData = {
+    title: r.title,
+    text: `${r.title} — ${r.desc.slice(0, 100)}...`,
+    url: r.url,
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      showToast('✅ Ссылка отправлена', 'success');
+    } catch (e) {
+      if (e.name !== 'AbortError') copyToClipboard(r.url, buttonEl);
+    }
+  } else {
+    copyToClipboard(r.url, buttonEl);
+  }
+}
+
+async function copyToClipboard(text, buttonEl) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (buttonEl) {
+      buttonEl.classList.add('copied');
+      buttonEl.textContent = '✓';
+      setTimeout(() => {
+        buttonEl.classList.remove('copied');
+        buttonEl.textContent = '🔗';
+      }, 1500);
+    }
+    showToast('🔗 Ссылка скопирована', 'success');
+  } catch (e) {
+    showToast('Не удалось скопировать', 'error');
+  }
+}
+
+// ─── РЕНДЕР ────────────────────────────────────────────
 function render() {
   const content = $('#content');
   content.innerHTML = '';
 
   let filtered = RESOURCES.filter(r => {
+    if (state.showFavorites && !isFavorite(r.id)) return false;
     if (state.category !== 'all' && r.category !== state.category) return false;
+    if (state.lang !== 'all' && r.lang !== state.lang) return false;
+    if (state.price !== 'all' && r.price !== state.price) return false;
     if (state.search && !matchesSearch(r, state.search)) return false;
     return true;
   });
@@ -1470,58 +1737,39 @@ function render() {
   if (!filtered.length) {
     content.innerHTML = `
       <div class="empty">
-        <span class="big">🔍</span>
-        <h3>Ничего не найдено</h3>
-        <p>Попробуй другой запрос или сбрось фильтры</p>
+        <span class="big">${state.showFavorites ? '⭐' : '🔍'}</span>
+        <h3>${state.showFavorites ? 'В избранном пусто' : 'Ничего не найдено'}</h3>
+        <p>${state.showFavorites ? 'Нажми на звёздочку на карточке, чтобы добавить ресурс' : 'Попробуй другой запрос или сбрось фильтры'}</p>
         <button type="button" class="reset-btn" id="resetFilters">Сбросить фильтры</button>
       </div>
     `;
     const btn = $('#resetFilters');
-    if (btn) btn.addEventListener('click', () => {
-      state.search = '';
-      state.category = 'all';
-      searchInput.value = '';
-      searchClear.classList.remove('visible');
-      updateFilterButtons();
-      render();
-    });
+    if (btn) btn.addEventListener('click', resetAll);
     return;
   }
 
-  // Информация о результате
+  // Инфо о результате
   const info = document.createElement('div');
   info.className = 'result-info';
-  const catName = state.category === 'all' ? 'все категории' : getCategory(state.category).name;
-  info.innerHTML = `Найдено <span class="num">${filtered.length}</span> ${declOfNum(filtered.length, ['ресурс', 'ресурса', 'ресурсов'])} · ${catName}`;
+
+  const activeChips = [];
+  if (state.showFavorites) activeChips.push('⭐ Избранное');
+  if (state.category !== 'all') activeChips.push(`${getCategory(state.category).emoji} ${getCategory(state.category).name}`);
+  if (state.lang !== 'all') activeChips.push(state.lang === 'RU' ? '🇷🇺 Русский' : '🇬🇧 English');
+  if (state.price !== 'all') activeChips.push({
+    free: '✓ Бесплатно',
+    freemium: '~ Freemium',
+    paid: '$ Платно',
+  }[state.price]);
+
+  let infoHtml = `Найдено <span class="num">${filtered.length}</span> ${declOfNum(filtered.length, ['ресурс', 'ресурса', 'ресурсов'])}`;
+  if (activeChips.length) {
+    infoHtml += ` <span class="active-filters">${activeChips.map(c => `<span class="result-chip">${c}</span>`).join('')}</span>`;
+  }
+  info.innerHTML = infoHtml;
   content.appendChild(info);
 
-  // Хлебные крошки
-  if (state.category !== 'all' || state.search) {
-    const crumb = document.createElement('div');
-    crumb.className = 'breadcrumbs';
-    let crumbHtml = `<span class="crumb" id="crumbAll">Все</span>`;
-    if (state.category !== 'all') {
-      const cat = getCategory(state.category);
-      crumbHtml += `<span class="sep">/</span><span class="current">${cat.emoji} ${cat.name}</span>`;
-    }
-    if (state.search) {
-      crumbHtml += `<span class="sep">/</span><span class="current">🔍 "${escapeHtml(state.search)}"</span>`;
-    }
-    crumb.innerHTML = crumbHtml;
-    content.appendChild(crumb);
-    const crumbAll = $('#crumbAll');
-    if (crumbAll) crumbAll.addEventListener('click', () => {
-      state.category = 'all';
-      state.search = '';
-      searchInput.value = '';
-      searchClear.classList.remove('visible');
-      updateFilterButtons();
-      render();
-    });
-  }
-
-  // Группировка только при "all" без поиска и сортировке "default"
-  const groupByCategory = state.category === 'all' && !state.search && state.sort === 'default';
+  const groupByCategory = state.category === 'all' && !state.search && state.sort === 'default' && !state.showFavorites;
 
   if (groupByCategory) {
     CATEGORIES.forEach(cat => {
@@ -1546,10 +1794,32 @@ function render() {
   }
 }
 
-function declOfNum(n, titles) {
-  const cases = [2, 0, 1, 1, 1, 2];
-  return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
+function resetAll() {
+  state.search = '';
+  state.category = 'all';
+  state.lang = 'all';
+  state.price = 'all';
+  state.showFavorites = false;
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  langSelect.value = 'all';
+  priceSelect.value = 'all';
+  sortSelect.value = 'default';
+  state.sort = 'default';
+  updateFilterButtons();
+  render();
 }
+
+// ─── СЛУЧАЙНЫЙ РЕСУРС ──────────────────────────────────
+function randomResource() {
+  if (!RESOURCES.length) return;
+  const r = RESOURCES[Math.floor(Math.random() * RESOURCES.length)];
+  trackView(r.id);
+  showToast(`🎲 ${r.title}`, 'success');
+  window.open(r.url, '_blank', 'noopener');
+}
+
+$('#randomBtn').addEventListener('click', randomResource);
 
 // ─── СТАТИСТИКА ────────────────────────────────────────
 function renderStats() {
@@ -1568,24 +1838,23 @@ scrollTopBtn.addEventListener('click', () => {
 });
 
 // ─── ГЛАВНАЯ ССЫЛКА ────────────────────────────────────
-$('#brandLink').addEventListener('click', (e) => {
-  e.preventDefault();
-  state.search = '';
-  state.category = 'all';
-  searchInput.value = '';
-  searchClear.classList.remove('visible');
-  updateFilterButtons();
-  render();
+$('#brandLink').addEventListener('click', () => {
+  resetAll();
+  renderRecTabs();
+  renderRecommendations();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 // ─── ИНИЦИАЛИЗАЦИЯ ─────────────────────────────────────
 function init() {
   try {
-    const savedTheme = localStorage.getItem('devatlas-theme');
-    applyTheme(savedTheme || 'dark');
+    const savedTheme = localStorage.getItem(STORAGE.theme);
+    if (savedTheme) applyTheme(savedTheme);
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
+    else applyTheme('dark');
   } catch(e) { applyTheme('dark'); }
 
+  updateFavCount();
   renderStats();
   renderFilters();
   renderRecTabs();
@@ -1597,13 +1866,54 @@ init();
 
 // ─── ГОРЯЧИЕ КЛАВИШИ ───────────────────────────────────
 document.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+  const inInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT';
+
+  // Ctrl+K или / — поиск
+  if (((e.ctrlKey || e.metaKey) && e.key === 'k') || (e.key === '/' && !inInput)) {
     e.preventDefault();
     searchInput.focus();
     searchInput.select();
+    return;
   }
-  if (e.key === 'Escape' && document.activeElement === searchInput) {
-    searchInput.blur();
+
+  if (inInput) {
+    if (e.key === 'Escape') {
+      if (document.activeElement === searchInput && state.search) {
+        state.search = '';
+        searchInput.value = '';
+        searchClear.classList.remove('visible');
+        render();
+      } else {
+        e.target.blur();
+      }
+    }
+    return;
+  }
+
+  // R — случайный ресурс
+  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
+    if (!e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      randomResource();
+    }
+  }
+
+  // T — сменить тему
+  if (e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') {
+    if (!e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      const next = state.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      showToast(next === 'dark' ? '🌙 Тёмная тема' : '☀️ Светлая тема');
+    }
+  }
+
+  // Esc — сброс
+  if (e.key === 'Escape') {
+    if (state.search || state.category !== 'all' || state.lang !== 'all' || state.price !== 'all' || state.showFavorites) {
+      resetAll();
+      showToast('Фильтры сброшены');
+    }
   }
 });
 </script>
