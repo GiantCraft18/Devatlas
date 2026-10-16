@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08080f">
+<meta name="description" content="DevAtlas — удобная карта ресурсов для программистов: курсы, книги, документация, инструменты и нейросети. Поиск, фильтры и избранное.">
+<meta name="color-scheme" content="dark light">
+<title>DevAtlas — карта ресурсов для программистов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060c;
+    --bg-2: #0d0d17;
+    --surface: rgba(22, 22, 34, 0.85);
+    --surface-2: rgba(255, 255, 255, 0.03);
+    --surface-hover: rgba(255, 255, 255, 0.06);
+    --surface-strong: rgba(255, 255, 255, 0.09);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #f5f5fa;
+    --text-dim: #9a9ab0;
+    --text-mute: #5f5f78;
+    --accent: #7c5cff;
+    --accent-2: #b380ff;
+    --pink: #ff5c8a;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --blue: #38bdf8;
+    --orange: #fb923c;
+    --radius: 20px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.55);
+    --shadow-glow: 0 0 60px rgba(124, 92, 255, 0.2);
+  }
+
+  [data-theme="light"] {
+    --bg: #f4f4f9;
+    --bg-2: #eaeaf0;
+    --surface: rgba(255, 255, 255, 0.9);
+    --surface-2: rgba(0, 0, 0, 0.03);
+    --surface-hover: rgba(0, 0, 0, 0.05);
+    --surface-strong: rgba(0, 0, 0, 0.07);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+    --text: #12121c;
+    --text-dim: #4e4e66;
+    --text-mute: #8a8aa0;
+    --accent: #6d3ae0;
+    --accent-2: #7c5cff;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.18);
+    --shadow-glow: 0 0 60px rgba(124, 92, 255, 0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(ellipse 70% 55% at 12% 0%, rgba(124, 92, 255, 0.22), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 88% 100%, rgba(255, 92, 138, 0.14), transparent 55%),
+      radial-gradient(ellipse 55% 45% at 50% 45%, rgba(56, 189, 248, 0.07), transparent 60%);
+    pointer-events: none;
+    transition: opacity 0.3s;
+    animation: bgPulse 20s ease-in-out infinite;
+  }
+
+  @keyframes bgPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.85; }
+  }
+
+  [data-theme="light"] body::before { opacity: 0.45; }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.4;
+    mask-image: radial-gradient(ellipse 95% 75% at 50% 35%, #000 25%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 95% 75% at 50% 35%, #000 25%, transparent 85%);
+    pointer-events: none;
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(28px) saturate(1.6);
+    -webkit-backdrop-filter: blur(28px) saturate(1.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .topbar-inner {
+    max-width: 1480px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+  .brand:hover { opacity: 0.85; }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #7c5cff 0%, #ff5c8a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow:
+      0 6px 24px rgba(124, 92, 255, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+  }
+
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #7c5cff, #ff5c8a, #ffb86b);
+    opacity: 0;
+    z-index: -1;
+    filter: blur(8px);
+    transition: opacity 0.3s;
+  }
+
+  .brand:hover .brand-mark { transform: rotate(-10deg) scale(1.08); }
+  .brand:hover .brand-mark::after { opacity: 0.7; }
+
+  .brand-text { display: flex; flex-direction: column; }
+  .brand-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .brand-sub { font-size: 0.68rem; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 3px; }
+
+  .search-wrap {
+    flex: 1;
+    max-width: 560px;
+    position: relative;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 48px 12px 44px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.25s;
+  }
+  .search-input::placeholder { color: var(--text-mute); }
+  .search-input:focus {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+    box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.18);
+  }
+
+  .search-icon {
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    color: var(--text-mute); font-size: 0.95rem; pointer-events: none;
+  }
+
+  .search-kbd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 3px; pointer-events: none; transition: opacity 0.2s;
+  }
+  .search-input:focus ~ .search-kbd,
+  .search-input:not(:placeholder-shown) ~ .search-kbd { opacity: 0; }
+  .search-kbd kbd {
+    padding: 2px 6px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-mute);
+  }
+
+  .search-clear {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; border-radius: 7px;
+    background: var(--surface-strong); border: none;
+    color: var(--text-dim); cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    font-size: 0.8rem; transition: all 0.15s;
+  }
+  .search-clear.visible { display: flex; }
+  .search-clear:hover { background: var(--pink); color: #fff; }
+
+  .topbar-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+  .icon-button {
+    width: 40px; height: 40px; border-radius: 11px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.25s;
+    flex-shrink: 0; position: relative;
+  }
+  .icon-button:hover {
+    background: var(--surface-hover); color: var(--text);
+    border-color: var(--border-strong); transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .icon-button:active { transform: scale(0.96); }
+
+  .icon-button .badge-count {
+    position: absolute;
+    top: -4px; right: -4px;
+    min-width: 18px; height: 18px;
+    padding: 0 5px;
+    background: linear-gradient(135deg, #ff5c8a, #ff8fa3);
+    border-radius: 100px;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(255, 92, 138, 0.5);
+  }
+  .icon-button .badge-count.visible { display: flex; }
+
+  /* ─── HERO ─── */
+  .hero {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 64px 20px 36px;
+    text-align: center;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 22px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hero-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 10px var(--green);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.03;
+    margin-bottom: 18px;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, #b380ff 0%, #ff4d6d 45%, #ffb86b 90%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 8s ease infinite;
+  }
+
+  @keyframes gradientMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero p {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 660px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    padding: 13px 24px;
+    border-radius: 100px;
+    border: none;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow:
+      0 8px 24px rgba(124, 92, 255, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  .hero-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(124, 92, 255, 0.6);
+  }
+
+  .hero-btn.secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .hero-btn.secondary:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .hero-btn .kbd-hint {
+    padding: 2px 7px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.9;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 32px;
+  }
+
+  .stat {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.85rem; color: var(--text-dim);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    transition: all 0.25s;
+  }
+  .stat:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+  }
+  .stat strong { color: var(--text); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+  /* ─── RECOMMENDATIONS ─── */
+  .recommendations {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 22px 20px 8px;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+  }
+
+  .rec-panel {
+    background: linear-gradient(135deg, rgba(124, 92, 255, 0.16), rgba(255, 92, 138, 0.09));
+    border: 1px solid rgba(124, 92, 255, 0.3);
+    border-radius: var(--radius);
+    padding: 26px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .rec-panel::before {
+    content: '';
+    position: absolute; top: -50%; right: -20%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.25), transparent 70%);
+    pointer-events: none; filter: blur(50px);
+  }
+  .rec-panel::after {
+    content: '';
+    position: absolute; bottom: -50%; left: -10%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255, 92, 138, 0.18), transparent 70%);
+    pointer-events: none; filter: blur(50px);
+  }
+
+  .rec-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+
+  .rec-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em;
+  }
+
+  .rec-title .icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 3px 10px rgba(124, 92, 255, 0.6));
+    animation: sparkle 3s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.18) rotate(-10deg); }
+  }
+
+  .rec-title .sub {
+    font-size: 0.78rem; font-weight: 500;
+    color: var(--text-mute); margin-left: 4px;
+  }
+
+  .rec-tabs {
+    display: flex; gap: 4px; padding: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 100px; border: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .rec-tabs::-webkit-scrollbar { display: none; }
+  [data-theme="light"] .rec-tabs { background: rgba(255, 255, 255, 0.7); }
+
+  .rec-tab {
+    padding: 8px 16px;
+    background: transparent; border: none; border-radius: 100px;
+    color: var(--text-dim); font-family: inherit;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; display: inline-flex;
+    align-items: center; gap: 6px;
+  }
+  .rec-tab:hover { color: var(--text); }
+  .rec-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(124, 92, 255, 0.5);
+    transform: translateY(-1px);
+  }
+  .rec-tab .tab-count {
+    padding: 1px 7px;
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rec-tab:not(.active) .tab-count { background: var(--surface-strong); }
+
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    position: relative; z-index: 1;
+  }
+
+  .rec-empty {
+    grid-column: 1/-1;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 0.9rem;
+  }
+
+  .rec-empty .big { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.5; }
+
+  /* ─── CONTROLS ─── */
+  .controls {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 26px 20px 8px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+  }
+
+  .filters {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    align-items: center; flex: 1;
+  }
+
+  .filters-label {
+    font-size: 0.78rem; color: var(--text-mute);
+    font-weight: 700; margin-right: 4px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  .filter-btn {
+    padding: 9px 17px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-dim); font-family: inherit;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+    display: inline-flex; align-items: center;
+    gap: 6px; white-space: nowrap;
+  }
+  .filter-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    color: var(--text); transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; border-color: transparent;
+    box-shadow: 0 8px 20px rgba(124, 92, 255, 0.4);
+    transform: translateY(-2px);
+  }
+  .filter-btn .count {
+    font-size: 0.7rem; opacity: 0.8;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 1px 6px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+  }
+  .filter-btn:not(.active) .count { background: var(--surface-strong); }
+
+  .selects-row {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .select-label {
+    font-size: 0.72rem;
+    color: var(--text-mute);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .sort-select {
+    padding: 9px 34px 9px 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a9ab0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    background-size: 14px;
+    transition: all 0.2s;
+  }
+  .sort-select:hover { border-color: var(--border-strong); background-color: var(--surface-hover); }
+  .sort-select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.18); }
+  .sort-select option { background: var(--bg-2); color: var(--text); }
+
+  /* ─── CONTENT ─── */
+  .content {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 18px 20px 80px;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+  }
+
+  .result-info {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 22px; padding: 13px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem; color: var(--text-dim);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    flex-wrap: wrap;
+  }
+
+  .result-info .num {
+    font-weight: 700; color: var(--accent-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+  }
+
+  .result-info .active-filters {
+    display: inline-flex; align-items: center;
+    gap: 5px; flex-wrap: wrap;
+  }
+
+  .result-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: rgba(124, 92, 255, 0.18);
+    border: 1px solid rgba(124, 92, 255, 0.3);
+    border-radius: 100px;
+    font-size: 0.73rem;
+    color: var(--accent-2);
+    font-weight: 600;
+  }
+
+  .section-title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 1.2rem; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px; margin-top: 36px;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  .section-title::before {
+    content: '';
+    width: 4px; height: 24px;
+    background: linear-gradient(180deg, var(--accent), var(--pink));
+    border-radius: 4px; flex-shrink: 0;
+  }
+
+  .section-title .count {
+    font-size: 0.72rem; padding: 3px 11px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 18px;
+  }
+
+  /* Compact mode */
+  .cards-grid.compact {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .cards-grid.compact .card-body { padding: 14px; }
+  .cards-grid.compact .card-desc { -webkit-line-clamp: 2; font-size: 0.78rem; }
+  .cards-grid.compact .card-title { font-size: 0.92rem; }
+  .cards-grid.compact .card-thumb-emoji { font-size: 3rem; }
+
+  /* Large mode */
+  .cards-grid.large {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 22px;
+  }
+  .cards-grid.large .card-body { padding: 22px; }
+  .cards-grid.large .card-title { font-size: 1.15rem; }
+  .cards-grid.large .card-thumb-emoji { font-size: 4.5rem; }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: var(--radius); padding: 1px;
+    background: linear-gradient(135deg, transparent, rgba(124, 92, 255, 0.4), transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0; transition: opacity 0.35s;
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: rgba(124, 92, 255, 0.4);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-thumb {
+    aspect-ratio: 16 / 9;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--card-gradient, linear-gradient(135deg, #1a1a26, #0e0e18));
+  }
+  .card-thumb::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.18), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(0, 0, 0, 0.3), transparent 55%);
+    pointer-events: none;
+  }
+  .card-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.35));
+    pointer-events: none;
+  }
+  [data-theme="light"] .card-thumb::before {
+    background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.5), transparent 55%);
+  }
+  [data-theme="light"] .card-thumb::after {
+    background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.15));
+  }
+
+  .card-thumb-emoji {
+    font-size: 4.2rem;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.55));
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 1; line-height: 1;
+  }
+  .card:hover .card-thumb-emoji { transform: scale(1.18) rotate(-6deg); }
+
+  .card-thumb-badge {
+    position: absolute; top: 12px; left: 12px;
+    padding: 5px 12px; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    z-index: 2; color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .card-thumb-new {
+    position: absolute; top: 12px; right: 12px;
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 0.08em;
+    z-index: 3; color: #fff;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    box-shadow: 0 4px 14px rgba(74, 222, 128, 0.6);
+    animation: pulseNew 2s ease infinite;
+  }
+
+  @keyframes pulseNew {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  .card-thumb-rating {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2;
+    letter-spacing: 0.02em;
+  }
+
+  .card-thumb-actions {
+    position: absolute;
+    top: 12px; right: 12px;
+    display: flex; gap: 6px;
+    z-index: 4;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: all 0.3s;
+  }
+
+  .card:hover .card-thumb-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* если есть NEW — сдвигаем actions ниже */
+  .card-thumb-new + .card-thumb-actions,
+  .card-thumb-new ~ .card-thumb-actions {
+    top: 44px;
+  }
+
+  .card-action {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.25s;
+    padding: 0;
+  }
+
+  .card-action:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.15);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .card-action.favorited {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+  }
+
+  .card-action.copied {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-color: transparent;
+  }
+
+  .card-body {
+    padding: 18px;
+    display: flex; flex-direction: column;
+    gap: 10px; flex: 1;
+  }
+
+  .card-category {
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  .card-title {
+    font-size: 1.05rem; font-weight: 700;
+    letter-spacing: -0.015em; line-height: 1.35;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-desc {
+    font-size: 0.84rem; color: var(--text-dim);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 0.73rem; color: var(--text-mute);
+    margin-top: auto;
+    gap: 8px;
+  }
+
+  .card-meta-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .card-price {
+    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .card-price.free { color: var(--green); }
+  .card-price.paid { color: var(--yellow); }
+  .card-price.freemium { color: var(--blue); }
+
+  .card-lang {
+    padding: 3px 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .card-views {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.68rem;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .card-arrow {
+    color: var(--text-mute);
+    transition: transform 0.3s, color 0.3s;
+    font-size: 1.1rem;
+  }
+  .card:hover .card-arrow {
+    color: var(--accent-2);
+    transform: translateX(5px);
+  }
+
+  /* ─── EMPTY ─── */
+  .empty {
+    padding: 80px 20px; text-align: center;
+    color: var(--text-mute);
+  }
+  .empty .big {
+    font-size: 4.5rem; opacity: 0.35;
+    margin-bottom: 18px; display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .empty h3 {
+    font-size: 1.3rem; color: var(--text-dim);
+    margin-bottom: 8px; font-weight: 700;
+  }
+  .empty p { font-size: 0.9rem; margin-bottom: 22px; }
+
+  .empty .reset-btn {
+    padding: 11px 22px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none; border-radius: 100px;
+    color: #fff; font-family: inherit;
+    font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 8px 20px rgba(124, 92, 255, 0.45);
+  }
+  .empty .reset-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(124, 92, 255, 0.6);
+  }
+
+  /* ─── SCROLL TOP ─── */
+  .scroll-top {
+    position: fixed; bottom: 28px; right: 28px;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none; color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem;
+    box-shadow: 0 10px 28px rgba(124, 92, 255, 0.55);
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 90;
+  }
+  .scroll-top.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .scroll-top:hover {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 0 16px 40px rgba(124, 92, 255, 0.7);
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    padding: 13px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    font-size: 0.88rem;
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 90vw;
+    text-align: center;
+    font-weight: 600;
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.success { border-color: rgba(74, 222, 128, 0.5); }
+  .toast.error { border-color: rgba(255, 92, 138, 0.5); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    max-width: 1480px; margin: 0 auto;
+    padding: 36px 20px 52px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-mute);
+    border-top: 1px solid var(--border);
+  }
+  footer p { margin-bottom: 8px; line-height: 1.65; }
+  footer a {
+    color: var(--accent-2); text-decoration: none;
+    transition: color 0.2s; font-weight: 600;
+  }
+  footer a:hover { color: var(--text); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .rec-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  }
+
+  @media (max-width: 900px) {
+    .topbar-inner { flex-wrap: wrap; gap: 10px; }
+    .brand { order: 1; }
+    .topbar-actions { order: 2; margin-left: auto; }
+    .search-wrap { order: 3; flex: 1 1 100%; max-width: none; }
+    .hero { padding: 44px 20px 26px; }
+    .rec-header { flex-direction: column; align-items: flex-start; }
+    .rec-tabs { width: 100%; justify-content: flex-start; }
+    .controls { flex-direction: column; align-items: stretch; gap: 12px; }
+    .filters { order: 1; }
+    .selects-row { order: 2; justify-content: flex-start; }
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 14px; }
+    .topbar { padding: 10px 14px; }
+    .brand-mark { width: 36px; height: 36px; font-size: 1.1rem; }
+    .brand-name { font-size: 0.98rem; }
+    .brand-sub { display: none; }
+    .hero { padding: 30px 14px 18px; }
+    .hero h1 { font-size: 1.75rem; }
+    .hero p { font-size: 0.92rem; }
+    .hero-actions { gap: 8px; }
+    .hero-btn { padding: 10px 18px; font-size: 0.85rem; }
+    .hero-btn .kbd-hint { display: none; }
+    .hero-stats { gap: 8px; margin-top: 22px; }
+    .stat { padding: 7px 14px; font-size: 0.78rem; }
+    .recommendations, .controls, .content { padding-left: 14px; padding-right: 14px; }
+    .rec-panel { padding: 18px; }
+    .rec-grid { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .cards-grid.compact { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .cards-grid.compact .card-body { padding: 10px; }
+    .card:hover { transform: translateY(-2px); }
+    .card-thumb-actions { opacity: 1; transform: translateY(0); }
+    .icon-button { width: 36px; height: 36px; font-size: 0.9rem; }
+    .search-input { padding: 10px 40px 10px 40px; font-size: 0.85rem; }
+    .search-kbd { display: none; }
+    .scroll-top { bottom: 20px; right: 20px; width: 44px; height: 44px; font-size: 1rem; }
+    .filter-btn { padding: 7px 13px; font-size: 0.78rem; }
+    .selects-row { width: 100%; }
+    .select-wrap { flex: 1; min-width: 0; }
+    .sort-select { width: 100%; padding: 9px 30px 9px 12px; font-size: 0.78rem; }
+    .select-label { display: none; }
+    .result-info { padding: 10px 14px; font-size: 0.82rem; }
+    .card-thumb-emoji { font-size: 3.4rem; }
+    .card-thumb-new { top: 8px; right: 8px; font-size: 0.58rem; }
+    .card-thumb-actions { top: 8px; right: 8px; }
+    .card-thumb-new ~ .card-thumb-actions { top: 40px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ─── DevAtlas polish pass ─── */
+  :root {
+    --radius: 22px;
+    --radius-sm: 15px;
+    --radius-xs: 10px;
+    --accent: #8b72ff;
+    --accent-2: #b59cff;
+    --focus-ring: 0 0 0 3px rgba(139, 114, 255, .28);
+  }
+  body {
+    background-attachment: fixed;
+    letter-spacing: -.008em;
+  }
+  ::selection { background: rgba(139,114,255,.36); color: var(--text); }
+  :focus-visible { outline: none; box-shadow: var(--focus-ring) !important; }
+  button, select, a, input { touch-action: manipulation; }
+  .topbar { background: color-mix(in srgb, var(--bg-2) 78%, transparent); }
+  .topbar-inner { gap: 20px; }
+  .brand-mark {
+    border-radius: 14px;
+    background: linear-gradient(145deg, #8b72ff 0%, #6650e8 48%, #ff679b 100%);
+    box-shadow: 0 8px 28px rgba(124,92,255,.32), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .search-input { min-height: 46px; }
+  .hero { padding-top: clamp(48px, 7vw, 88px); padding-bottom: 44px; }
+  .hero h1 { max-width: 950px; margin-inline: auto; text-wrap: balance; }
+  .hero p { text-wrap: pretty; }
+  .hero-badge { border-color: rgba(74,222,128,.18); }
+  .hero-btn { min-height: 48px; }
+  .hero-btn.primary { background: linear-gradient(120deg, #795cff, #9c6bff 55%, #c05bff); }
+  .stat { padding: 11px 18px; }
+  .recommendations { padding-top: 26px; }
+  .rec-panel {
+    background:
+      radial-gradient(ellipse at 10% 0%, rgba(124,92,255,.14), transparent 48%),
+      linear-gradient(135deg, color-mix(in srgb, var(--surface) 90%, #7c5cff 10%), var(--surface));
+    border-color: rgba(139,114,255,.25);
+  }
+  .controls { padding-top: 30px; }
+  .filter-btn, .sort-select, .icon-button { min-height: 40px; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+  .card {
+    border-radius: 21px;
+    background: linear-gradient(160deg, var(--surface), color-mix(in srgb, var(--bg-2) 72%, transparent));
+    box-shadow: 0 8px 28px rgba(0,0,0,.08);
+  }
+  .card-thumb { isolation: isolate; }
+  .card-thumb-emoji { text-shadow: 0 12px 34px rgba(0,0,0,.24); }
+  .card-body { padding: 20px; gap: 11px; }
+  .card-title { font-size: 1.08rem; }
+  .card-desc { line-height: 1.65; }
+  .card-meta { padding-top: 14px; }
+  .card-action { width: 38px; height: 38px; }
+  .card-thumb-actions { opacity: 1; transform: none; }
+  .result-info { box-shadow: var(--shadow-sm); }
+  .section-title { margin-top: 42px; }
+  .section-title::before { height: 26px; width: 4px; }
+  .empty {
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+  }
+  footer { margin-top: 10px; }
+  footer a { text-underline-offset: 3px; }
+  .toast { bottom: max(24px, env(safe-area-inset-bottom)); }
+  .scroll-top { bottom: max(24px, env(safe-area-inset-bottom)); }
+  @media (hover: hover) and (pointer: fine) {
+    .card-thumb-actions { opacity: 0; transform: translateY(-5px); }
+    .card:hover .card-thumb-actions, .card:focus-within .card-thumb-actions { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 600px) {
+    .hero { padding-top: 34px; }
+    .hero h1 { font-size: clamp(1.85rem, 8vw, 2.55rem); line-height: 1.1; }
+    .hero-badge { font-size: .72rem; padding: 7px 12px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .stat { justify-content: center; gap: 5px; padding: 9px 5px; font-size: .7rem; }
+    .stat strong { font-size: .78rem; }
+    .rec-panel { padding: 15px; }
+    .rec-title { flex-wrap: wrap; }
+    .cards-grid, .cards-grid.compact, .cards-grid.large { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .card-body { padding: 16px; }
+    .card-thumb { aspect-ratio: 16 / 8.5; }
+    .card-thumb-emoji { font-size: 3.6rem; }
+    .card-thumb-actions { opacity: 1; transform: none; }
+    .card:hover { transform: translateY(-2px); }
+    .controls { padding-top: 22px; }
+    .filters-label { width: 100%; }
+    .filter-btn { padding: 8px 12px; }
+    .result-info { align-items: flex-start; }
+    .scroll-top { right: 14px; bottom: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" id="brandLink">
+      <div class="brand-mark">🧭</div>
+      <div class="brand-text">
+        <div class="brand-name">DevAtlas</div>
+        <div class="brand-sub">learning map</div>
+      </div>
+    </a>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Поиск: Python, книги, нейросети..." autocomplete="off">
+      <div class="search-kbd"><kbd>Ctrl</kbd><kbd>K</kbd></div>
+      <button type="button" class="search-clear" id="searchClear" aria-label="Очистить">✕</button>
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="icon-button" id="favoritesBtn" title="Избранное">
+        ⭐
+        <span class="badge-count" id="favCount">0</span>
+      </button>
+      <button type="button" class="icon-button" id="themeToggle" title="Сменить тему">🌙</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    <span>Регулярно пополняется новыми ресурсами</span>
+  </div>
+  <h1>Карта для тех, кто <span>учится программировать</span></h1>
+  <p>Курсы, книги, YouTube-каналы, документация и инструменты — всё в одном месте. Без регистрации, без рекламы, с честными рекомендациями.</p>
+  <div class="hero-actions">
+    <button type="button" class="hero-btn primary" id="randomBtn">
+      🎲 Случайный ресурс <span class="kbd-hint">R</span>
+    </button>
+    <button type="button" class="hero-btn secondary" id="favoritesHeroBtn">
+      ⭐ Моё избранное
+    </button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">📚 <strong id="statTotal">0</strong> ресурсов</div>
+    <div class="stat">🗂️ <strong id="statCats">0</strong> категорий</div>
+    <div class="stat">⭐ <strong id="statRec">0</strong> в рекомендациях</div>
+  </div>
+</div>
+
+<div class="recommendations">
+  <div class="rec-panel">
+    <div class="rec-header">
+      <div class="rec-title">
+        <span class="icon">✨</span>
+        <span>Рекомендации</span>
+        <span class="sub" id="recSubtitle"></span>
+      </div>
+      <div class="rec-tabs" id="recTabs"></div>
+    </div>
+    <div class="rec-grid" id="recGrid"></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="filters">
+    <span class="filters-label">Категории</span>
+    <button type="button" class="filter-btn active" data-cat="all">
+      Все <span class="count" id="countAll">0</span>
+    </button>
+    <div id="filterButtons" style="display: contents;"></div>
+  </div>
+  <div class="selects-row">
+    <div class="select-wrap">
+      <span class="select-label">Язык</span>
+      <select class="sort-select" id="langSelect">
+        <option value="all">Все</option>
+        <option value="RU">🇷🇺 Русский</option>
+        <option value="EN">🇬🇧 English</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="select-label">Цена</span>
+      <select class="sort-select" id="priceSelect">
+        <option value="all">Все</option>
+        <option value="free">Бесплатно</option>
+        <option value="freemium">Freemium</option>
+        <option value="paid">Платно</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="select-label">Сортировка</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="default">По категориям</option>
+        <option value="rating">По рейтингу</option>
+        <option value="alpha">А → Я</option>
+        <option value="alpha-desc">Я → А</option>
+      </select>
+    </div>
+    <div class="select-wrap">
+      <span class="select-label">Вид</span>
+      <select class="sort-select" id="viewSelect">
+        <option value="normal">Обычный</option>
+        <option value="compact">Компактный</option>
+        <option value="large">Крупный</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="content" id="content"></div>
+
+<button type="button" class="scroll-top" id="scrollTop" aria-label="Наверх">↑</button>
+<div class="toast" id="toast"></div>
+
+<footer>
+  <p><strong>DevAtlas</strong> — открытый каталог ресурсов. Всё работает локально в браузере, ничего не отправляется на сервер.</p>
+  <p>Нашёл ошибку или хочешь добавить ресурс? <a href="https://github.com/GiantCraft18" target="_blank" rel="noopener">Напиши на GitHub</a></p>
+</footer>
+
+<script>
+/* ============================================================
+   DevAtlas v4.0
+   ============================================================ */
+
+const CATEGORIES = [
+  { id: 'ml',        name: 'Нейросети и ML',  emoji: '🧠', color: '#a78bfa', gradient: 'linear-gradient(135deg, #4c1d95, #7c3aed)' },
+  { id: 'python',    name: 'Python',          emoji: '🐍', color: '#4ade80', gradient: 'linear-gradient(135deg, #064e3b, #10b981)' },
+  { id: 'web',       name: 'Веб-разработка',  emoji: '🌐', color: '#38bdf8', gradient: 'linear-gradient(135deg, #0c4a6e, #0ea5e9)' },
+  { id: 'algorithms',name: 'Алгоритмы',       emoji: '🧮', color: '#fbbf24', gradient: 'linear-gradient(135deg, #78350f, #f59e0b)' },
+  { id: 'books',     name: 'Книги',           emoji: '📚', color: '#ff8fa3', gradient: 'linear-gradient(135deg, #831843, #ec4899)' },
+  { id: 'youtube',   name: 'YouTube',         emoji: '🎥', color: '#fb923c', gradient: 'linear-gradient(135deg, #7c2d12, #ea580c)' },
+  { id: 'tools',     name: 'Инструменты',     emoji: '🛠️', color: '#22d3ee', gradient: 'linear-gradient(135deg, #164e63, #06b6d4)' },
+  { id: 'design',    name: 'Дизайн и UI',     emoji: '🎨', color: '#f472b6', gradient: 'linear-gradient(135deg, #831843, #f472b6)' },
+];
+
+const RESOURCES = [
+  // ══════════════ ML / НЕЙРОСЕТИ ══════════════
+  { id: 'ml1', title: 'Fast.ai — Practical Deep Learning', desc: 'Бесплатный курс по глубокому обучению. Идёт от практики к теории: сначала делаешь, потом понимаешь. Лучший вход в ML для программистов.', url: 'https://course.fast.ai/', category: 'ml', emoji: '🚀', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-08-15' },
+  { id: 'ml2', title: 'Andrej Karpathy — Neural Networks: Zero to Hero', desc: 'Легендарный курс от бывшего директора AI в Tesla. Строит нейросеть с нуля на Python. Разбирает backpropagation по шагам.', url: 'https://karpathy.ai/zero-to-hero.html', category: 'ml', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-06-20' },
+  { id: 'ml3', title: 'Hugging Face Course', desc: 'Официальный курс по трансформерам и библиотеке Hugging Face. NLP, vision, аудио — всё на практике с готовыми моделями.', url: 'https://huggingface.co/learn/nlp-course', category: 'ml', emoji: '🤗', lang: 'EN', price: 'free', rating: 5, rec: ['ml'], added: '2026-07-10' },
+  { id: 'ml4', title: '3Blue1Brown — Нейронные сети', desc: 'Визуальное объяснение нейросетей от Гранта Сандерсона. 4 видео, которые дают интуицию лучше, чем целый семестр.', url: 'https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi', category: 'ml', emoji: '🎬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-05-12' },
+  { id: 'ml5', title: 'Deep Learning Book (Goodfellow)', desc: 'Канонический учебник по глубокому обучению. Тяжело, но фундаментально. Для тех, кто хочет понимать математику.', url: 'https://www.deeplearningbook.org/', category: 'ml', emoji: '📖', lang: 'EN', price: 'free', rating: 4, rec: ['advanced'], added: '2026-04-01' },
+  { id: 'ml6', title: 'Kaggle Learn', desc: 'Микро-курсы по ML, Python, Pandas, SQL. Каждый — на пару часов, с практикой прямо в браузере.', url: 'https://www.kaggle.com/learn', category: 'ml', emoji: '🏆', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-15' },
+  { id: 'ml7', title: 'Deep Learning Specialization (Coursera)', desc: 'Курс Эндрю Ына. Классика, с которой начинали миллионы. Платный сертификат, но материалы можно смотреть бесплатно.', url: 'https://www.coursera.org/specializations/deep-learning', category: 'ml', emoji: '🎓', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'ml'], added: '2026-02-10' },
+  { id: 'ml8', title: 'Практикум по ML от Яндекса', desc: 'Русскоязычный курс по машинному обучению. Много практики, разбор реальных задач.', url: 'https://education.yandex.ru/handbook/ml', category: 'ml', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'ml'], added: '2026-09-01' },
+  { id: 'ml9', title: 'Papers with Code', desc: 'Каталог ML-статей с кодом. Находишь модель — сразу видишь реализацию. Лучший способ следить за SOTA.', url: 'https://paperswithcode.com/', category: 'ml', emoji: '📄', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'], added: '2026-01-20' },
+  { id: 'ml10', title: 'Hugging Face Models', desc: 'Тысячи готовых моделей: от GPT до Stable Diffusion. Скачиваешь, используешь в своём проекте, файнтюнишь.', url: 'https://huggingface.co/models', category: 'ml', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'tools'], added: '2026-09-25' },
+  { id: 'ml11', title: 'Stanford CS229 — Machine Learning', desc: 'Легендарный курс Эндрю Ына в Стэнфорде. Глубокая математика, от линейной регрессии до reinforcement learning.', url: 'https://cs229.stanford.edu/', category: 'ml', emoji: '🎯', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-10-01' },
+  { id: 'ml12', title: 'Stanford CS231n — Computer Vision', desc: 'Курс по компьютерному зрению от Фей-Фей Ли. Свёрточные сети, распознавание образов, детекция объектов.', url: 'http://cs231n.stanford.edu/', category: 'ml', emoji: '👁️', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-09-18' },
+  { id: 'ml13', title: 'Stanford CS224n — NLP with Deep Learning', desc: 'Курс по обработке естественного языка. От word2vec до трансформеров и больших языковых моделей.', url: 'https://web.stanford.edu/class/cs224n/', category: 'ml', emoji: '💬', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-09-20' },
+  { id: 'ml14', title: 'PyTorch Tutorials', desc: 'Официальные туториалы PyTorch. От тензоров до обучения собственных нейросетей. Практика, практика, практика.', url: 'https://pytorch.org/tutorials/', category: 'ml', emoji: '🔥', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'tools'], added: '2026-08-01' },
+  { id: 'ml15', title: 'TensorFlow Tutorials', desc: 'Официальные туториалы от Google. Keras, TensorFlow Lite, TensorFlow.js — всё для продакшена.', url: 'https://www.tensorflow.org/tutorials', category: 'ml', emoji: '🔶', lang: 'EN', price: 'free', rating: 5, rec: ['ml'], added: '2026-07-20' },
+  { id: 'ml16', title: 'Scikit-learn Documentation', desc: 'Главная библиотека классического ML. Кластеризация, регрессия, классификация — всё с примерами.', url: 'https://scikit-learn.org/stable/', category: 'ml', emoji: '🔧', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'tools'], added: '2026-06-15' },
+  { id: 'ml17', title: 'Kaggle Competitions', desc: 'Соревнования по ML с реальными задачами и призовыми фондами. Лучший способ прокачать навыки.', url: 'https://www.kaggle.com/competitions', category: 'ml', emoji: '🏅', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'ml'], added: '2026-05-25' },
+  { id: 'ml18', title: 'Distill.pub', desc: 'Визуальные объяснения ML-концепций. Каждая статья — произведение искусства. Журнал, который понятно объясняет сложное.', url: 'https://distill.pub/', category: 'ml', emoji: '🔬', lang: 'EN', price: 'free', rating: 5, rec: ['ml'], added: '2026-04-10' },
+
+  // ══════════════ PYTHON ══════════════
+  { id: 'py1', title: 'Официальный туториал Python', desc: 'Документация от разработчиков языка. Скучно, но это база, на которую ссылаются все остальные курсы.', url: 'https://docs.python.org/3/tutorial/', category: 'python', emoji: '🐍', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-05' },
+  { id: 'py2', title: 'Automate the Boring Stuff', desc: 'Книга для тех, кто не программист, но хочет автоматизировать рутину. Работа с файлами, Excel, PDF, парсинг сайтов.', url: 'https://automatetheboringstuff.com/', category: 'python', emoji: '🤖', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-22' },
+  { id: 'py3', title: 'Real Python', desc: 'Тысячи статей и туториалов по Python. От синтаксиса до async, от Django до data science.', url: 'https://realpython.com/', category: 'python', emoji: '📰', lang: 'EN', price: 'freemium', rating: 5, rec: ['beginner', 'python'], added: '2026-02-18' },
+  { id: 'py4', title: 'Pythontutor — визуализация кода', desc: 'Пошаговое выполнение Python-кода с визуализацией переменных и стека.', url: 'https://pythontutor.com/', category: 'python', emoji: '🔬', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-05-08' },
+  { id: 'py5', title: 'Flask Mega-Tutorial', desc: 'Классический туториал по Flask от Мигеля Гринберга. Строит полноценное приложение от начала до деплоя.', url: 'https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world', category: 'python', emoji: '🌶️', lang: 'EN', price: 'free', rating: 5, rec: ['python', 'web'], added: '2026-06-14' },
+  { id: 'py6', title: 'Python. К вершинам мастерства', desc: 'Продвинутая книга по Python. Метаклассы, дескрипторы, генераторы — всё, что отличает джуна от сеньора.', url: 'https://www.ozon.ru/search/?text=python+к+вершинам+мастерства', category: 'python', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced'], added: '2026-04-10' },
+  { id: 'py7', title: 'Fluent Python (Luciano Ramalho)', desc: 'Лучшая книга для продвинутого Python. Идиоматичный код, магические методы, асинхронность. Второе издание.', url: 'https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/', category: 'python', emoji: '📗', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-09-15' },
+  { id: 'py8', title: 'Python Crash Course', desc: 'Быстрый старт в Python через проекты. Три реальных проекта: игра, визуализация данных, веб-приложение.', url: 'https://nostarch.com/python-crash-course-3rd-edition', category: 'python', emoji: '📙', lang: 'EN', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-08-05' },
+  { id: 'py9', title: 'Django Documentation', desc: 'Официальная документация Django. Один из лучших фреймворков для веба на Python. Много примеров и руководств.', url: 'https://docs.djangoproject.com/', category: 'python', emoji: '🎯', lang: 'EN', price: 'free', rating: 5, rec: ['python', 'web'], added: '2026-07-10' },
+  { id: 'py10', title: 'FastAPI Documentation', desc: 'Современный фреймворк для создания API на Python. Асинхронность, автодокументация, типизация.', url: 'https://fastapi.tiangolo.com/', category: 'python', emoji: '⚡', lang: 'EN', price: 'free', rating: 5, rec: ['python', 'web'], added: '2026-10-01' },
+  { id: 'py11', title: 'Python для сложных задач (Хабрахабр)', desc: 'Русскоязычный туториал по Python для анализа данных. Pandas, NumPy, Matplotlib на реальных примерах.', url: 'https://habr.com/ru/hubs/python/', category: 'python', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 4, rec: ['beginner', 'python'], added: '2026-06-20' },
+
+  // ══════════════ WEB ══════════════
+  { id: 'web1', title: 'MDN Web Docs', desc: 'Главная документация по вебу: HTML, CSS, JS, Web API. Если что-то не знаешь — начинай отсюда.', url: 'https://developer.mozilla.org/', category: 'web', emoji: '📘', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-01-10' },
+  { id: 'web2', title: 'javascript.info', desc: 'Лучший учебник по JavaScript. От основ до продвинутых тем: промисы, замыкания, прототипы.', url: 'https://javascript.info/', category: 'web', emoji: '🟨', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-02-14' },
+  { id: 'web3', title: 'Frontend Masters — Learning Path', desc: 'Структурированные пути обучения: от JS до React, от CSS до Node.', url: 'https://frontendmasters.com/learn/', category: 'web', emoji: '🎯', lang: 'EN', price: 'freemium', rating: 5, rec: ['web'], added: '2026-05-20' },
+  { id: 'web4', title: 'Roadmap.sh', desc: 'Визуальные роадмапы для разработчиков: frontend, backend, DevOps, ML.', url: 'https://roadmap.sh/', category: 'web', emoji: '🗺️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-03-05' },
+  { id: 'web5', title: 'CSS-Tricks', desc: 'Блог с лучшими материалами по CSS. Flexbox, Grid, анимации — с примерами.', url: 'https://css-tricks.com/', category: 'web', emoji: '🎨', lang: 'EN', price: 'free', rating: 5, rec: ['web'], added: '2026-04-18' },
+  { id: 'web6', title: 'The Odin Project', desc: 'Полностью бесплатный курс по веб-разработке. От HTML до fullstack.', url: 'https://www.theodinproject.com/', category: 'web', emoji: '⚔️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-07-22' },
+  { id: 'web7', title: 'freeCodeCamp', desc: 'Тысячи часов бесплатных курсов по вебу. Сертификаты, проекты, сообщество.', url: 'https://www.freecodecamp.org/', category: 'web', emoji: '🏕️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-15' },
+  { id: 'web8', title: 'Хекслет', desc: 'Русскоязычная школа программирования. Много бесплатных курсов, сильный курс по JS.', url: 'https://ru.hexlet.io/', category: 'web', emoji: '🇷🇺', lang: 'RU', price: 'freemium', rating: 4, rec: ['beginner'], added: '2026-09-10' },
+  { id: 'web9', title: 'React Documentation', desc: 'Официальная документация React. Крючки, контекст, компоненты — всё с интерактивными примерами.', url: 'https://react.dev/', category: 'web', emoji: '⚛️', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-08-15' },
+  { id: 'web10', title: 'Vue.js Documentation', desc: 'Прогрессивный фреймворк для веба. Проще в изучении, чем React. Отличный старт для новичков.', url: 'https://vuejs.org/', category: 'web', emoji: '💚', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'beginner'], added: '2026-07-01' },
+  { id: 'web11', title: 'TypeScript Handbook', desc: 'Официальное руководство по TypeScript. Типы, интерфейсы, дженерики. Стандарт для больших проектов.', url: 'https://www.typescriptlang.org/docs/handbook/', category: 'web', emoji: '🔷', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-09-20' },
+  { id: 'web12', title: 'Node.js Documentation', desc: 'Официальная документация Node.js. Серверный JavaScript, работа с файлами, HTTP, стримы.', url: 'https://nodejs.org/en/docs/', category: 'web', emoji: '🟢', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-06-10' },
+  { id: 'web13', title: 'Next.js Documentation', desc: 'Фреймворк поверх React. SSR, SSG, оптимизация, роутинг из коробки. Главный выбор для продакшена.', url: 'https://nextjs.org/docs', category: 'web', emoji: '▲', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-08-25' },
+  { id: 'web14', title: 'Tailwind CSS', desc: 'Utility-first CSS фреймворк. Быстрый прототипинг, гибкие стили, огромное сообщество.', url: 'https://tailwindcss.com/', category: 'web', emoji: '💨', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'design'], added: '2026-07-15' },
+  { id: 'web15', title: 'Web.dev — Learn', desc: 'Курсы от Google по современному вебу. Производительность, доступность, PWA.', url: 'https://web.dev/learn/', category: 'web', emoji: '🌐', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-05-05' },
+  { id: 'web16', title: 'The A11Y Project', desc: 'Всё о веб-доступности. Как сделать сайт удобным для всех, включая людей с ограничениями.', url: 'https://www.a11yproject.com/', category: 'web', emoji: '♿', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'design'], added: '2026-04-20' },
+  { id: 'web17', title: 'You Don\'t Know JS', desc: 'Глубокая серия книг по JavaScript. Замыкания, прототипы, this, асинхронность — всё изнутри.', url: 'https://github.com/getify/You-Dont-Know-JS', category: 'web', emoji: '📚', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'books'], added: '2026-03-15' },
+  { id: 'web18', title: 'Eloquent JavaScript', desc: 'Книга-учебник по JS с интерактивными примерами. Читается в браузере, ничего не нужно скачивать.', url: 'https://eloquentjavascript.net/', category: 'web', emoji: '📖', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'books'], added: '2026-02-01' },
+
+  // ══════════════ АЛГОРИТМЫ ══════════════
+  { id: 'alg1', title: 'LeetCode', desc: 'Стандарт для подготовки к собеседованиям. 3000+ задач по алгоритмам с автоматической проверкой.', url: 'https://leetcode.com/', category: 'algorithms', emoji: '💡', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced'], added: '2026-01-08' },
+  { id: 'alg2', title: 'NeetCode — Roadmap', desc: 'Упорядоченный путь по LeetCode: 150 задач, которые покрывают все паттерны.', url: 'https://neetcode.io/roadmap', category: 'algorithms', emoji: '🧭', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'algorithms'], added: '2026-08-05' },
+  { id: 'alg3', title: 'Грокаем алгоритмы', desc: 'Иллюстрированное введение в алгоритмы. Без сложной математики, с картинками.', url: 'https://www.ozon.ru/search/?text=грокаем+алгоритмы', category: 'algorithms', emoji: '📗', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-05-01' },
+  { id: 'alg4', title: 'Алгоритмы. Построение и анализ (CLRS)', desc: 'Академическая библия по алгоритмам. Тяжело, но это то, что читают в MIT.', url: 'https://www.ozon.ru/search/?text=алгоритмы+построение+и+анализ', category: 'algorithms', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-02-20' },
+  { id: 'alg5', title: 'CS50 — Harvard', desc: 'Легендарный вводный курс CS от Гарварда. Начинается с C, доходит до Python и веба.', url: 'https://cs50.harvard.edu/x/', category: 'algorithms', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-06-30' },
+  { id: 'alg6', title: 'VisuAlgo', desc: 'Визуализация алгоритмов и структур данных. Смотришь, как работает сортировка — сразу понятно.', url: 'https://visualgo.net/', category: 'algorithms', emoji: '🎞️', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-04-25' },
+  { id: 'alg7', title: 'Codeforces', desc: 'Площадка для спортивного программирования. Регулярные контесты, рейтинг, огромное сообщество.', url: 'https://codeforces.com/', category: 'algorithms', emoji: '⚔️', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'algorithms'], added: '2026-09-12' },
+  { id: 'alg8', title: 'HackerRank', desc: 'Задачи по алгоритмам и структурам данных с автоматической проверкой. Хорош для подготовки к собеседованиям.', url: 'https://www.hackerrank.com/', category: 'algorithms', emoji: '🎯', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-07-25' },
+  { id: 'alg9', title: 'Codewars', desc: 'Ката-задачи по программированию. Прокачиваешь скилл через решение коротких задачек разной сложности.', url: 'https://www.codewars.com/', category: 'algorithms', emoji: '🥋', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'algorithms'], added: '2026-06-05' },
+  { id: 'alg10', title: 'Cracking the Coding Interview', desc: 'Книга-подготовка к собеседованиям в топовые компании. 189 задач с разбором, стратегии решения.', url: 'https://www.crackingthecodinginterview.com/', category: 'algorithms', emoji: '💼', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-08-10' },
+  { id: 'alg11', title: 'Introduction to Algorithms (CLRS)', desc: 'Академический учебник по алгоритмам. Тот самый «кирпич». Используется в MIT, Stanford, Berkeley.', url: 'https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/', category: 'algorithms', emoji: '📘', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-05-18' },
+  { id: 'alg12', title: 'The Algorithm Design Manual', desc: 'Практический подход к алгоритмам. Не просто теория, а как выбирать алгоритмы под задачу.', url: 'https://www.algorist.com/', category: 'algorithms', emoji: '🛠️', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-04-15' },
+  { id: 'alg13', title: 'Tech Interview Handbook', desc: 'Бесплатный гайд по подготовке к техническим собеседованиям. Резюме, поведенческие вопросы, алгоритмы.', url: 'https://www.techinterviewhandbook.org/', category: 'algorithms', emoji: '📋', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'algorithms'], added: '2026-10-01' },
+
+  // ══════════════ КНИГИ ══════════════
+  { id: 'bk1', title: 'Чистый код (Robert Martin)', desc: 'Классика о том, как писать код, который можно читать. Примеры на Java, но принципы универсальны.', url: 'https://www.ozon.ru/search/?text=чистый+код', category: 'books', emoji: '📘', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-01-25' },
+  { id: 'bk2', title: 'Программист-прагматик', desc: 'Не про синтаксис, а про подход. Как думать о коде, как учиться, как не выгорать.', url: 'https://www.ozon.ru/search/?text=программист+прагматик', category: 'books', emoji: '📙', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-03-12' },
+  { id: 'bk3', title: 'Рефакторинг (Martin Fowler)', desc: 'Каталог приёмов улучшения кода. Что делать, когда код работает, но плохо пахнет.', url: 'https://www.ozon.ru/search/?text=рефакторинг+фowler', category: 'books', emoji: '📕', lang: 'RU', price: 'paid', rating: 5, rec: ['books', 'advanced'], added: '2026-05-14' },
+  { id: 'bk4', title: 'Гарри Поттер и методы рационального мышления', desc: 'Не про программирование, но про то, как думать. Логика, байесовский вывод, критическое мышление.', url: 'http://hpmor.ru/', category: 'books', emoji: '⚡', lang: 'RU', price: 'free', rating: 5, rec: ['beginner', 'books'], added: '2026-07-18' },
+  { id: 'bk5', title: 'Structure and Interpretation of Computer Programs', desc: 'SICP — легендарная книга MIT. Учит думать о программах в терминах абстракций.', url: 'https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html', category: 'books', emoji: '📗', lang: 'EN', price: 'free', rating: 5, rec: ['advanced', 'books'], added: '2026-02-08' },
+  { id: 'bk6', title: 'Designing Data-Intensive Applications', desc: 'DDIA — библия для тех, кто работает с данными. Про распределённые системы, БД, консенсус.', url: 'https://dataintensive.net/', category: 'books', emoji: '🏗️', lang: 'EN', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-06-05' },
+  { id: 'bk7', title: 'Clean Architecture (Robert Martin)', desc: 'Продолжение «Чистого кода». Как проектировать архитектуру приложений, которые живут годами.', url: 'https://www.ozon.ru/search/?text=чистая+архитектура', category: 'books', emoji: '🏛️', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-08-20' },
+  { id: 'bk8', title: 'Code Complete (Steve McConnell)', desc: 'Энциклопедия практик программирования. От именования переменных до архитектуры. Толстая, но бесценная.', url: 'https://www.ozon.ru/search/?text=совершенный+код', category: 'books', emoji: '📚', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-07-05' },
+  { id: 'bk9', title: 'The Mythical Man-Month', desc: 'Классика о менеджменте в разработке. Почему добавление людей замедляет проект.', url: 'https://www.ozon.ru/search/?text=мифический+человеко-месяц', category: 'books', emoji: '📅', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-05-25' },
+  { id: 'bk10', title: 'Working Effectively with Legacy Code', desc: 'Как работать с чужим/старым кодом. Майкл Физерс учит не бояться легаси и улучшать его.', url: 'https://www.ozon.ru/search/?text=работа+с+легаси+кодом', category: 'books', emoji: '🔧', lang: 'RU', price: 'paid', rating: 5, rec: ['advanced', 'books'], added: '2026-04-10' },
+  { id: 'bk11', title: 'Soft Skills (John Sonmez)', desc: 'Книга о том, что вне кода. Как строить карьеру, искать работу, продавать себя.', url: 'https://www.ozon.ru/search/?text=soft+skills', category: 'books', emoji: '💼', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-03-01' },
+  { id: 'bk12', title: 'Deep Work (Cal Newport)', desc: 'О концентрации. Как работать продуктивно в мире, полном отвлечений. Важна для программистов.', url: 'https://www.ozon.ru/search/?text=в+работу+с+головой', category: 'books', emoji: '🎯', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-02-15' },
+  { id: 'bk13', title: 'Head First Design Patterns', desc: 'Паттерны проектирования в лёгкой форме. Картинки, диалоги, минимум терминов. Лучший вход в паттерны.', url: 'https://www.oreilly.com/library/view/head-first-design/9781492077992/', category: 'books', emoji: '🎨', lang: 'EN', price: 'paid', rating: 5, rec: ['books', 'advanced'], added: '2026-09-05' },
+  { id: 'bk14', title: 'The Pragmatic Programmer', desc: '20-летие переиздание. От ремесла к мастерству в разработке. Оригинал — книга №1 у программистов.', url: 'https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/', category: 'books', emoji: '💎', lang: 'EN', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-08-28' },
+  { id: 'bk15', title: 'CODE (Charles Petzold)', desc: 'Книга о том, как работают компьютеры от самого базового уровня. От азбуки Морзе до микропроцессоров.', url: 'https://www.ozon.ru/search/?text=код+тайный+язык', category: 'books', emoji: '🔢', lang: 'RU', price: 'paid', rating: 5, rec: ['beginner', 'books'], added: '2026-06-15' },
+
+  // ══════════════ YOUTUBE ══════════════
+  { id: 'yt1', title: 'Хауди Хо', desc: 'Русскоязычный канал о программировании. Объясняет сложные вещи просто, много разборов.', url: 'https://www.youtube.com/@HowdyHoChannel', category: 'youtube', emoji: '🇷🇺', lang: 'RU', price: 'free', rating: 5, rec: ['beginner'], added: '2026-01-30' },
+  { id: 'yt2', title: 'Vlad Mishustin', desc: 'Канал о фронтенде и вебе. Разборы React, JS, CSS, архитектуры.', url: 'https://www.youtube.com/@vladmishustin', category: 'youtube', emoji: '⚛️', lang: 'RU', price: 'free', rating: 5, rec: ['web'], added: '2026-04-05' },
+  { id: 'yt3', title: 'Fireship', desc: 'Короткие видео по 100 секунд о новых технологиях, фреймворках и языках.', url: 'https://www.youtube.com/@Fireship', category: 'youtube', emoji: '🔥', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-08' },
+  { id: 'yt4', title: 'Andrej Karpathy', desc: 'Канал автора Neural Networks: Zero to Hero. Строит GPT с нуля, разбирает трансформеры.', url: 'https://www.youtube.com/@AndrejKarpathy', category: 'youtube', emoji: '🧠', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'advanced'], added: '2026-08-20' },
+  { id: 'yt5', title: 'Traversy Media', desc: 'Классика YouTube-обучения вебу. Курсы по React, Node, JS, CSS.', url: 'https://www.youtube.com/@TraversyMedia', category: 'youtube', emoji: '🎓', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-02-25' },
+  { id: 'yt6', title: 'Хекслет — YouTube', desc: 'Канал школы Хекслет. Разборы основ программирования, объяснения концепций.', url: 'https://www.youtube.com/@hexlet', category: 'youtube', emoji: '📺', lang: 'RU', price: 'free', rating: 4, rec: ['beginner'], added: '2026-06-15' },
+  { id: 'yt7', title: 'Computer Science Center', desc: 'Канал CS Center с лекциями по алгоритмам, ML, C++. Материалы уровня университета.', url: 'https://www.youtube.com/@compscicenter', category: 'youtube', emoji: '🏛️', lang: 'RU', price: 'free', rating: 5, rec: ['algorithms'], added: '2026-05-22' },
+  { id: 'yt8', title: 'Web Dev Simplified', desc: 'Канал по вебу для новичков. Короткие видео, JS, React, CSS. Отличные объяснения.', url: 'https://www.youtube.com/@WebDevSimplified', category: 'youtube', emoji: '🌐', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'web'], added: '2026-07-12' },
+  { id: 'yt9', title: 'The Coding Train', desc: 'Канал Дэниэла Шиффмана. Креативное программирование на JavaScript и p5.js. Весело и заразительно.', url: 'https://www.youtube.com/@TheCodingTrain', category: 'youtube', emoji: '🚂', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-05-10' },
+  { id: 'yt10', title: 'sentdex', desc: 'Канал о Python, ML, data science. Реальные проекты от идеи до продакшена.', url: 'https://www.youtube.com/@sentdex', category: 'youtube', emoji: '🐍', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'python'], added: '2026-04-15' },
+  { id: 'yt11', title: 'StatQuest (Josh Starmer)', desc: 'Канал о статистике и ML. Сложные концепции объясняются простым языком с картинками.', url: 'https://www.youtube.com/@statquest', category: 'youtube', emoji: '📊', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'beginner'], added: '2026-08-10' },
+  { id: 'yt12', title: 'Two Minute Papers', desc: 'Короткие обзоры свежих ML-статей. За 2 минуты узнаёшь, что нового в AI.', url: 'https://www.youtube.com/@TwoMinutePapers', category: 'youtube', emoji: '📄', lang: 'EN', price: 'free', rating: 5, rec: ['ml'], added: '2026-06-20' },
+  { id: 'yt13', title: 'Yannic Kilcher', desc: 'Разборы ML-статей глубоко и по делу. Для тех, кто хочет понимать state of the art.', url: 'https://www.youtube.com/@YannicKilcher', category: 'youtube', emoji: '🎙️', lang: 'EN', price: 'free', rating: 5, rec: ['ml', 'advanced'], added: '2026-09-01' },
+  { id: 'yt14', title: 'Computerphile', desc: 'Канал о CS. Криптография, сети, алгоритмы, история компьютерной науки.', url: 'https://www.youtube.com/@Computerphile', category: 'youtube', emoji: '💻', lang: 'EN', price: 'free', rating: 5, rec: ['beginner'], added: '2026-03-15' },
+  { id: 'yt15', title: 'Ben Eater', desc: 'Как работают компьютеры на самом низком уровне. Собирает 8-битный компьютер на макетной плате.', url: 'https://www.youtube.com/@BenEater', category: 'youtube', emoji: '🔌', lang: 'EN', price: 'free', rating: 5, rec: ['advanced'], added: '2026-02-20' },
+
+  // ══════════════ ИНСТРУМЕНТЫ ══════════════
+  { id: 'tl1', title: 'GitHub', desc: 'Где живёт весь open source. Изучай чужие проекты, веди свои, собери портфолио.', url: 'https://github.com/', category: 'tools', emoji: '🐙', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'], added: '2026-01-02' },
+  { id: 'tl2', title: 'VS Code', desc: 'Редактор кода №1. Тысячи расширений, бесплатный, кросс-платформенный.', url: 'https://code.visualstudio.com/', category: 'tools', emoji: '💻', lang: 'EN', price: 'free', rating: 5, rec: ['beginner', 'tools'], added: '2026-02-12' },
+  { id: 'tl3', title: 'Obsidian', desc: 'Заметки в Markdown с графом связей. Отлично подходит для ведения конспектов.', url: 'https://obsidian.md/', category: 'tools', emoji: '🗒️', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-04-08' },
+  { id: 'tl4', title: 'RegExr', desc: 'Онлайн-редактор регулярных выражений. Пишешь regex — сразу видишь, что матчится.', url: 'https://regexr.com/', category: 'tools', emoji: '🔍', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-03-18' },
+  { id: 'tl5', title: 'CodePen', desc: 'Онлайн-песочница для HTML/CSS/JS. Быстро проверить идею, поделиться сниппетом.', url: 'https://codepen.io/', category: 'tools', emoji: '🖊️', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'tools'], added: '2026-05-28' },
+  { id: 'tl6', title: 'Docker', desc: 'Контейнеризация всего. Разворачивать проекты становится в разы проще.', url: 'https://www.docker.com/', category: 'tools', emoji: '🐳', lang: 'EN', price: 'freemium', rating: 5, rec: ['advanced', 'tools'], added: '2026-06-25' },
+  { id: 'tl7', title: 'Google Colab', desc: 'Jupyter-ноутбуки в браузере с бесплатным GPU. Для ML-экспериментов.', url: 'https://colab.research.google.com/', category: 'tools', emoji: '☁️', lang: 'EN', price: 'freemium', rating: 5, rec: ['ml', 'tools'], added: '2026-07-15' },
+  { id: 'tl8', title: 'Anki', desc: 'Программа для интервального повторения. Идеальна для заучивания терминов.', url: 'https://apps.ankiweb.net/', category: 'tools', emoji: '🎴', lang: 'EN', price: 'free', rating: 5, rec: ['tools'], added: '2026-08-10' },
+  { id: 'tl9', title: 'Vercel', desc: 'Хостинг для фронтенда и Next.js. Деплой за секунды, бесплатный тариф, поддержка доменов.', url: 'https://vercel.com/', category: 'tools', emoji: '▲', lang: 'EN', price: 'freemium', rating: 5, rec: ['web', 'tools'], added: '2026-09-05' },
+  { id: 'tl10', title: 'Netlify', desc: 'Альтернатива Vercel. Хостинг, CI/CD, serverless функции из коробки.', url: 'https://www.netlify.com/', category: 'tools', emoji: '🌐', lang: 'EN', price: 'freemium', rating: 5, rec: ['web', 'tools'], added: '2026-08-25' },
+  { id: 'tl11', title: 'Postman', desc: 'Тестирование API. Отправка HTTP-запросов, коллекции, документация.', url: 'https://www.postman.com/', category: 'tools', emoji: '📮', lang: 'EN', price: 'freemium', rating: 5, rec: ['web', 'tools'], added: '2026-07-20' },
+  { id: 'tl12', title: 'Vite', desc: 'Молниеносный сборщик для фронтенда. HMR, ES-модули, современный стек.', url: 'https://vitejs.dev/', category: 'tools', emoji: '⚡', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'tools'], added: '2026-10-01' },
+  { id: 'tl13', title: 'Bun', desc: 'Новый JS-рантайм. Быстрее Node.js. Встроенный бандлер, тест-раннер, пакетный менеджер.', url: 'https://bun.sh/', category: 'tools', emoji: '🥟', lang: 'EN', price: 'free', rating: 5, rec: ['web', 'advanced'], added: '2026-09-15' },
+  { id: 'tl14', title: 'Weights & Biases', desc: 'Платформа для трекинга ML-экспериментов. Логи, метрики, визуализация обучения.', url: 'https://wandb.ai/', category: 'tools', emoji: '📈', lang: 'EN', price: 'freemium', rating: 5, rec: ['ml', 'tools'], added: '2026-08-30' },
+  { id: 'tl15', title: 'Excalidraw', desc: 'Онлайн-доска для схем и диаграмм. Рисуешь от руки, делишься ссылкой.', url: 'https://excalidraw.com/', category: 'tools', emoji: '✏️', lang: 'EN', price: 'free', rating: 5, rec: ['tools', 'design'], added: '2026-06-10' },
+
+  // ══════════════ ДИЗАЙН ══════════════
+  { id: 'ds1', title: 'Refactoring UI', desc: 'Книга для разработчиков о дизайне. Как сделать интерфейс, который не стыдно показать.', url: 'https://www.refactoringui.com/', category: 'design', emoji: '🎨', lang: 'EN', price: 'paid', rating: 5, rec: ['design', 'books'], added: '2026-02-05' },
+  { id: 'ds2', title: 'Figma', desc: 'Стандарт дизайна интерфейсов. Работает в браузере, бесплатно для личных проектов.', url: 'https://www.figma.com/', category: 'design', emoji: '🎭', lang: 'EN', price: 'freemium', rating: 5, rec: ['design'], added: '2026-01-20' },
+  { id: 'ds3', title: 'Coolors', desc: 'Генератор цветовых палитр. Одна кнопка — и у тебя красивая схема.', url: 'https://coolors.co/', category: 'design', emoji: '🌈', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'tools'], added: '2026-04-12' },
+  { id: 'ds4', title: 'Google Fonts', desc: 'Тысячи бесплатных шрифтов, готовых к использованию на сайте.', url: 'https://fonts.google.com/', category: 'design', emoji: '🅰️', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'web'], added: '2026-03-25' },
+  { id: 'ds5', title: 'Unsplash', desc: 'Бесплатные фото высокого качества. Для обложек, блогов, презентаций.', url: 'https://unsplash.com/', category: 'design', emoji: '📷', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-05-30' },
+  { id: 'ds6', title: 'Laws of UX', desc: 'Законы UX в карточках: почему пользователи ведут себя так, а не иначе.', url: 'https://lawsofux.com/', category: 'design', emoji: '🧩', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-09-15' },
+  { id: 'ds7', title: 'Material Design', desc: 'Дизайн-система от Google. Компоненты, гайдлайны, иконки — всё для мобильных и веб-приложений.', url: 'https://m3.material.io/', category: 'design', emoji: '📐', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-08-15' },
+  { id: 'ds8', title: 'Apple Human Interface Guidelines', desc: 'Официальные гайдлайны Apple. Как делать интерфейсы для iOS и macOS.', url: 'https://developer.apple.com/design/human-interface-guidelines/', category: 'design', emoji: '🍎', lang: 'EN', price: 'free', rating: 5, rec: ['design'], added: '2026-07-10' },
+  { id: 'ds9', title: 'Dribbble', desc: 'Площадка для дизайнеров. Вдохновение, портфолио, тренды в UI/UX.', url: 'https://dribbble.com/', category: 'design', emoji: '🏀', lang: 'EN', price: 'freemium', rating: 5, rec: ['design'], added: '2026-06-01' },
+  { id: 'ds10', title: 'Mobbin', desc: 'Библиотека скриншотов мобильных приложений. Отличный источник вдохновения для UI.', url: 'https://mobbin.com/', category: 'design', emoji: '📱', lang: 'EN', price: 'freemium', rating: 5, rec: ['design'], added: '2026-09-25' },
+  { id: 'ds11', title: 'Awwwards', desc: 'Лучшие сайты интернета. Кураторская подборка, оценки, награды. Вдохновляет.', url: 'https://www.awwwards.com/', category: 'design', emoji: '🏆', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'web'], added: '2026-05-20' },
+  { id: 'ds12', title: 'Haikei — SVG Generator', desc: 'Генератор SVG-паттернов и форм. Быстро создаёт красивые фоны для сайта.', url: 'https://haikei.app/', category: 'design', emoji: '🌊', lang: 'EN', price: 'free', rating: 5, rec: ['design', 'tools'], added: '2026-10-05' },
+];
+
+const REC_GROUPS = [
+  { id: 'beginner', name: 'Новичкам', emoji: '🌱' },
+  { id: 'web', name: 'Веб', emoji: '🌐' },
+  { id: 'ml', name: 'ML/AI', emoji: '🧠' },
+  { id: 'books', name: 'Книги', emoji: '📚' },
+  { id: 'tools', name: 'Инструменты', emoji: '🛠️' },
+  { id: 'algorithms', name: 'Алгоритмы', emoji: '🧮' },
+  { id: 'design', name: 'Дизайн', emoji: '🎨' },
+  { id: 'advanced', name: 'Продвинутым', emoji: '🚀' },
+];
+
+const STORAGE = {
+  theme: 'devatlas-theme',
+  favorites: 'devatlas-favorites',
+  views: 'devatlas-views',
+  view: 'devatlas-view',
+};
+
+function loadFavorites() {
+  try { const raw = localStorage.getItem(STORAGE.favorites); return raw ? JSON.parse(raw) : []; } catch(e) { return []; }
+}
+function saveFavorites(list) {
+  try { localStorage.setItem(STORAGE.favorites, JSON.stringify(list)); } catch(e) {}
+}
+function loadViews() {
+  try { const raw = localStorage.getItem(STORAGE.views); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
+}
+function saveViews(data) {
+  try { localStorage.setItem(STORAGE.views, JSON.stringify(data)); } catch(e) {}
+}
+
+const state = {
+  theme: 'dark',
+  search: '',
+  category: 'all',
+  lang: 'all',
+  price: 'all',
+  recGroup: 'beginner',
+  sort: 'default',
+  view: 'normal',
+  showFavorites: false,
+  favorites: loadFavorites(),
+  views: loadViews(),
+};
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+const searchInput = $('#searchInput');
+const searchClear = $('#searchClear');
+const sortSelect = $('#sortSelect');
+const langSelect = $('#langSelect');
+const priceSelect = $('#priceSelect');
+const viewSelect = $('#viewSelect');
+const scrollTopBtn = $('#scrollTop');
+const toastEl = $('#toast');
+const favCountEl = $('#favCount');
+
+function getCategory(id) {
+  return CATEGORIES.find(c => c.id === id) || { name: id, emoji: '📁', color: '#7c5cff', gradient: 'linear-gradient(135deg, #1a1a26, #0e0e18)' };
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function highlightMatch(text, query) {
+  if (!query) return escapeHtml(text);
+  const escaped = escapeHtml(text);
+  const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return escaped.replace(new RegExp(q, 'gi'), (m) => `<mark style="background: rgba(124,92,255,0.4); color: inherit; padding: 0 3px; border-radius: 3px;">${m}</mark>`);
+}
+
+function isNew(resource) {
+  if (!resource.added) return false;
+  const diff = Date.now() - new Date(resource.added).getTime();
+  return diff < 30 * 24 * 60 * 60 * 1000;
+}
+
+function declOfNum(n, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+  return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
+}
+
+let toastTimeout;
+function showToast(text, type = 'info') {
+  toastEl.textContent = text;
+  toastEl.classList.remove('success', 'error');
+  if (type === 'success') toastEl.classList.add('success');
+  if (type === 'error') toastEl.classList.add('error');
+  toastEl.classList.add('visible');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toastEl.classList.remove('visible'), 2200);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  state.theme = theme;
+  $('#themeToggle').textContent = theme === 'dark' ? '🌙' : '☀️';
+  try { localStorage.setItem(STORAGE.theme, theme); } catch(e) {}
+}
+
+$('#themeToggle').addEventListener('click', () => {
+  const next = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  showToast(next === 'dark' ? '🌙 Тёмная тема' : '☀️ Светлая тема');
+});
+
+function isFavorite(id) { return state.favorites.includes(id); }
+
+function toggleFavorite(id) {
+  const idx = state.favorites.indexOf(id);
+  if (idx === -1) {
+    state.favorites.push(id);
+    showToast('⭐ Добавлено в избранное', 'success');
+  } else {
+    state.favorites.splice(idx, 1);
+    showToast('Удалено из избранного');
+  }
+  saveFavorites(state.favorites);
+  updateFavCount();
+  render();
+  renderRecommendations();
+  renderRecTabs();
+}
+
+function updateFavCount() {
+  const count = state.favorites.length;
+  favCountEl.textContent = count > 99 ? '99+' : count;
+  favCountEl.classList.toggle('visible', count > 0);
+}
+
+$('#favoritesBtn').addEventListener('click', () => {
+  state.showFavorites = !state.showFavorites;
+  if (state.showFavorites) {
+    state.category = 'all';
+    state.search = '';
+    state.lang = 'all';
+    state.price = 'all';
+    state.recGroup = 'favorites';
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    langSelect.value = 'all';
+    priceSelect.value = 'all';
+    updateFilterButtons();
+    renderRecTabs();
+    renderRecommendations();
+  }
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+$('#favoritesHeroBtn').addEventListener('click', () => {
+  state.showFavorites = true;
+  state.recGroup = 'favorites';
+  state.category = 'all';
+  state.search = '';
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  updateFilterButtons();
+  renderRecTabs();
+  renderRecommendations();
+  render();
+  showToast('⭐ Показаны избранные ресурсы');
+});
+
+function trackView(id) {
+  state.views[id] = (state.views[id] || 0) + 1;
+  saveViews(state.views);
+}
+
+function matchesSearch(resource, query) {
+  if (!query) return true;
+  const q = query.toLowerCase().trim();
+  const haystack = [
+    resource.title,
+    resource.desc,
+    resource.lang,
+    getCategory(resource.category).name,
+    ...(resource.rec || [])
+  ].join(' ').toLowerCase();
+  return haystack.includes(q);
+}
+
+searchInput.addEventListener('input', (e) => {
+  state.search = e.target.value;
+  searchClear.classList.toggle('visible', !!state.search);
+  render();
+});
+
+searchClear.addEventListener('click', () => {
+  state.search = '';
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  render();
+  searchInput.focus();
+});
+
+function renderFilters() {
+  const container = $('#filterButtons');
+  const allBtn = $('[data-cat="all"]');
+  const countAll = $('#countAll');
+
+  countAll.textContent = RESOURCES.length;
+
+  container.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const count = RESOURCES.filter(r => r.category === cat.id).length;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn' + (state.category === cat.id ? ' active' : '');
+    btn.dataset.cat = cat.id;
+    btn.innerHTML = `${cat.emoji} ${cat.name} <span class="count">${count}</span>`;
+    btn.addEventListener('click', () => {
+      state.category = cat.id;
+      state.showFavorites = false;
+      updateFilterButtons();
+      render();
+    });
+    container.appendChild(btn);
+  });
+
+  allBtn.classList.toggle('active', state.category === 'all' && !state.showFavorites);
+}
+
+function updateFilterButtons() {
+  $$('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === state.category && !state.showFavorites);
+  });
+}
+
+$('[data-cat="all"]').addEventListener('click', () => {
+  state.category = 'all';
+  state.showFavorites = false;
+  updateFilterButtons();
+  render();
+});
+
+langSelect.addEventListener('change', (e) => { state.lang = e.target.value; render(); });
+priceSelect.addEventListener('change', (e) => { state.price = e.target.value; render(); });
+sortSelect.addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+
+viewSelect.addEventListener('change', (e) => {
+  state.view = e.target.value;
+  try { localStorage.setItem(STORAGE.view, state.view); } catch(e) {}
+  render();
+});
+
+function sortResources(list) {
+  const sorted = [...list];
+  if (state.sort === 'rating') {
+    sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  } else if (state.sort === 'alpha') {
+    sorted.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+  } else if (state.sort === 'alpha-desc') {
+    sorted.sort((a, b) => b.title.localeCompare(a.title, 'ru'));
+  }
+  return sorted;
+}
+
+function renderRecTabs() {
+  const container = $('#recTabs');
+  container.innerHTML = '';
+
+  const favBtn = document.createElement('button');
+  favBtn.type = 'button';
+  favBtn.className = 'rec-tab' + (state.recGroup === 'favorites' ? ' active' : '');
+  favBtn.innerHTML = `⭐ Моё <span class="tab-count">${state.favorites.length}</span>`;
+  favBtn.addEventListener('click', () => {
+    state.recGroup = 'favorites';
+    state.showFavorites = true;
+    renderRecTabs();
+    renderRecommendations();
+  });
+  container.appendChild(favBtn);
+
+  REC_GROUPS.forEach(g => {
+    const count = RESOURCES.filter(r => r.rec && r.rec.includes(g.id)).length;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rec-tab' + (state.recGroup === g.id ? ' active' : '');
+    btn.innerHTML = `${g.emoji} ${g.name} <span class="tab-count">${count}</span>`;
+    btn.addEventListener('click', () => {
+      state.recGroup = g.id;
+      state.showFavorites = false;
+      renderRecTabs();
+      renderRecommendations();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderRecommendations() {
+  const container = $('#recGrid');
+  const subtitle = $('#recSubtitle');
+
+  let recs;
+  let subtitleText;
+
+  if (state.recGroup === 'favorites') {
+    recs = RESOURCES.filter(r => isFavorite(r.id));
+    subtitleText = recs.length ? `${recs.length} ${declOfNum(recs.length, ['ресурс', 'ресурса', 'ресурсов'])}` : '';
+  } else {
+    recs = RESOURCES.filter(r => r.rec && r.rec.includes(state.recGroup));
+    const group = REC_GROUPS.find(g => g.id === state.recGroup);
+    subtitleText = group ? `для «${group.name}»` : '';
+  }
+
+  subtitle.textContent = subtitleText;
+  container.innerHTML = '';
+
+  if (!recs.length) {
+    container.innerHTML = `
+      <div class="rec-empty">
+        <span class="big">${state.recGroup === 'favorites' ? '⭐' : '🔍'}</span>
+        <div>${state.recGroup === 'favorites' ? 'Ты пока не добавил ни одного ресурса в избранное' : 'В этой группе пока нет рекомендаций'}</div>
+        <div style="margin-top: 8px; font-size: 0.8rem;">Нажми на ⭐ на карточке, чтобы добавить</div>
+      </div>
+    `;
+    return;
+  }
+
+  recs.slice(0, 6).forEach(r => {
+    container.appendChild(createCard(r));
+  });
+}
+
+function createCard(r) {
+  const cat = getCategory(r.category);
+  const priceLabel = r.price === 'free' ? '✓ Бесплатно' : r.price === 'paid' ? '$ Платно' : '~ Freemium';
+  const priceClass = r.price;
+  const fav = isFavorite(r.id);
+  const views = state.views[r.id] || 0;
+  const isNewItem = isNew(r);
+
+  const a = document.createElement('a');
+  a.className = 'card';
+  a.href = r.url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.dataset.id = r.id;
+
+  const q = state.search;
+
+  a.innerHTML = `
+    <div class="card-thumb" style="background: ${cat.gradient};">
+      <div class="card-thumb-emoji">${r.emoji}</div>
+      <div class="card-thumb-badge">${cat.emoji} ${cat.name}</div>
+      <div class="card-thumb-rating"><span style="color: #fbbf24;">★</span> ${r.rating}</div>
+      ${isNewItem ? '<div class="card-thumb-new">NEW</div>' : ''}
+      <div class="card-thumb-actions">
+        <button type="button" class="card-action ${fav ? 'favorited' : ''}" data-action="fav" title="${fav ? 'Убрать из избранного' : 'В избранное'}">${fav ? '★' : '☆'}</button>
+        <button type="button" class="card-action" data-action="share" title="Поделиться">🔗</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-category" style="color: ${cat.color};">${cat.name}</div>
+      <div class="card-title">${highlightMatch(r.title, q)}</div>
+      <div class="card-desc" title="${escapeHtml(r.desc)}">${highlightMatch(r.desc, q)}</div>
+      <div class="card-meta">
+        <div class="card-meta-left">
+          <span class="card-price ${priceClass}">${priceLabel}</span>
+          <span class="card-lang">${r.lang}</span>
+          ${views > 0 ? `<span class="card-views" title="Ты открывал это ${views} раз">👁 ${views}</span>` : ''}
+        </div>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+  `;
+
+  a.addEventListener('click', (e) => {
+    if (e.target.closest('.card-action')) return;
+    trackView(r.id);
+  });
+
+  a.addEventListener('click', (e) => {
+    const action = e.target.closest('.card-action');
+    if (!action) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const type = action.dataset.action;
+    if (type === 'fav') toggleFavorite(r.id);
+    else if (type === 'share') shareResource(r, action);
+  });
+
+  return a;
+}
+
+async function shareResource(r, buttonEl) {
+  const shareData = {
+    title: r.title,
+    text: `${r.title} — ${r.desc.slice(0, 100)}...`,
+    url: r.url,
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      showToast('✅ Ссылка отправлена', 'success');
+    } catch (e) {
+      if (e.name !== 'AbortError') copyToClipboard(r.url, buttonEl);
+    }
+  } else {
+    copyToClipboard(r.url, buttonEl);
+  }
+}
+
+async function copyToClipboard(text, buttonEl) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (buttonEl) {
+      buttonEl.classList.add('copied');
+      buttonEl.textContent = '✓';
+      setTimeout(() => {
+        buttonEl.classList.remove('copied');
+        buttonEl.textContent = '🔗';
+      }, 1500);
+    }
+    showToast('🔗 Ссылка скопирована', 'success');
+  } catch (e) {
+    showToast('Не удалось скопировать', 'error');
+  }
+}
+
+function render() {
+  const content = $('#content');
+  content.innerHTML = '';
+
+  let filtered = RESOURCES.filter(r => {
+    if (state.showFavorites && !isFavorite(r.id)) return false;
+    if (state.category !== 'all' && r.category !== state.category) return false;
+    if (state.lang !== 'all' && r.lang !== state.lang) return false;
+    if (state.price !== 'all' && r.price !== state.price) return false;
+    if (state.search && !matchesSearch(r, state.search)) return false;
+    return true;
+  });
+
+  filtered = sortResources(filtered);
+
+  if (!filtered.length) {
+    content.innerHTML = `
+      <div class="empty">
+        <span class="big">${state.showFavorites ? '⭐' : '🔍'}</span>
+        <h3>${state.showFavorites ? 'В избранном пусто' : 'Ничего не найдено'}</h3>
+        <p>${state.showFavorites ? 'Нажми на звёздочку на карточке, чтобы добавить ресурс' : 'Попробуй другой запрос или сбрось фильтры'}</p>
+        <button type="button" class="reset-btn" id="resetFilters">Сбросить фильтры</button>
+      </div>
+    `;
+    const btn = $('#resetFilters');
+    if (btn) btn.addEventListener('click', resetAll);
+    return;
+  }
+
+  const info = document.createElement('div');
+  info.className = 'result-info';
+
+  const activeChips = [];
+  if (state.showFavorites) activeChips.push('⭐ Избранное');
+  if (state.category !== 'all') activeChips.push(`${getCategory(state.category).emoji} ${getCategory(state.category).name}`);
+  if (state.lang !== 'all') activeChips.push(state.lang === 'RU' ? '🇷🇺 Русский' : '🇬🇧 English');
+  if (state.price !== 'all') activeChips.push({
+    free: '✓ Бесплатно', freemium: '~ Freemium', paid: '$ Платно',
+  }[state.price]);
+
+  let infoHtml = `Найдено <span class="num">${filtered.length}</span> ${declOfNum(filtered.length, ['ресурс', 'ресурса', 'ресурсов'])}`;
+  if (activeChips.length) {
+    infoHtml += ` <span class="active-filters">${activeChips.map(c => `<span class="result-chip">${c}</span>`).join('')}</span>`;
+  }
+  info.innerHTML = infoHtml;
+  content.appendChild(info);
+
+  const groupByCategory = state.category === 'all' && !state.search && state.sort === 'default' && !state.showFavorites;
+
+  if (groupByCategory) {
+    CATEGORIES.forEach(cat => {
+      const items = filtered.filter(r => r.category === cat.id);
+      if (!items.length) return;
+
+      const title = document.createElement('h2');
+      title.className = 'section-title';
+      title.innerHTML = `${cat.emoji} ${cat.name} <span class="count">${items.length}</span>`;
+      content.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'cards-grid' + (state.view !== 'normal' ? ' ' + state.view : '');
+      items.forEach(r => grid.appendChild(createCard(r)));
+      content.appendChild(grid);
+    });
+  } else {
+    const grid = document.createElement('div');
+    grid.className = 'cards-grid' + (state.view !== 'normal' ? ' ' + state.view : '');
+    filtered.forEach(r => grid.appendChild(createCard(r)));
+    content.appendChild(grid);
+  }
+}
+
+function resetAll() {
+  state.search = '';
+  state.category = 'all';
+  state.lang = 'all';
+  state.price = 'all';
+  state.showFavorites = false;
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  langSelect.value = 'all';
+  priceSelect.value = 'all';
+  sortSelect.value = 'default';
+  state.sort = 'default';
+  updateFilterButtons();
+  render();
+}
+
+function randomResource() {
+  if (!RESOURCES.length) return;
+  const r = RESOURCES[Math.floor(Math.random() * RESOURCES.length)];
+  trackView(r.id);
+  showToast(`🎲 ${r.title}`, 'success');
+  window.open(r.url, '_blank', 'noopener');
+}
+
+$('#randomBtn').addEventListener('click', randomResource);
+
+function renderStats() {
+  $('#statTotal').textContent = RESOURCES.length;
+  $('#statCats').textContent = CATEGORIES.length;
+  $('#statRec').textContent = RESOURCES.filter(r => r.rec && r.rec.length).length;
+}
+
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 600);
+}, { passive: true });
+
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+$('#brandLink').addEventListener('click', () => {
+  resetAll();
+  renderRecTabs();
+  renderRecommendations();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+function init() {
+  try {
+    const savedTheme = localStorage.getItem(STORAGE.theme);
+    if (savedTheme) applyTheme(savedTheme);
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
+    else applyTheme('dark');
+  } catch(e) { applyTheme('dark'); }
+
+  try {
+    const savedView = localStorage.getItem(STORAGE.view);
+    if (savedView) {
+      state.view = savedView;
+      viewSelect.value = savedView;
+    }
+  } catch(e) {}
+
+  updateFavCount();
+  renderStats();
+  renderFilters();
+  renderRecTabs();
+  renderRecommendations();
+  render();
+}
+
+init();
+
+document.addEventListener('keydown', (e) => {
+  const inInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT';
+
+  if (((e.ctrlKey || e.metaKey) && e.key === 'k') || (e.key === '/' && !inInput)) {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+    return;
+  }
+
+  if (inInput) {
+    if (e.key === 'Escape') {
+      if (document.activeElement === searchInput && state.search) {
+        state.search = '';
+        searchInput.value = '';
+        searchClear.classList.remove('visible');
+        render();
+      } else {
+        e.target.blur();
+      }
+    }
+    return;
+  }
+
+  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
+    if (!e.ctrlKey && !e.metaKey) { e.preventDefault(); randomResource(); }
+  }
+
+  if (e.key === 't' || e.key === 'T' || e.key === 'е' || e.key === 'Е') {
+    if (!e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      const next = state.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      showToast(next === 'dark' ? '🌙 Тёмная тема' : '☀️ Светлая тема');
+    }
+  }
+
+  if (e.key === 'Escape') {
+    if (state.search || state.category !== 'all' || state.lang !== 'all' || state.price !== 'all' || state.showFavorites) {
+      resetAll();
+      showToast('Фильтры сброшены');
+    }
+  }
+});
+</script>
+
+
+<script>
+/* Small UX and accessibility enhancements */
+(() => {
+  const search = document.getElementById('searchInput');
+  const themeButton = document.getElementById('themeToggle');
+  if (search) search.setAttribute('aria-label', 'Поиск по ресурсам');
+  if (themeButton) themeButton.setAttribute('aria-label', 'Переключить светлую или тёмную тему');
+  document.querySelectorAll('.icon-button').forEach((button) => {
+    if (!button.getAttribute('aria-label')) button.setAttribute('aria-label', button.title || 'Действие');
+  });
+  // Prevent accidental form-like submission if the page is later extended.
+  document.querySelectorAll('button').forEach((button) => {
+    if (!button.hasAttribute('type')) button.type = 'button';
+  });
+  // Restore focus to search with a slash shortcut, but never steal focus while typing.
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.activeElement === search && !search.value) search.blur();
+  });
+})();
+</script>
+
+</body>
+</html>
